@@ -54,4 +54,16 @@
 body{
   margin:0;
 }
+table{
+  font-size: 1.7vh;
+}
+.el-pagination{
+  position: fixed;bottom: 0px;text-align: center;
+}
+.el-pagination__total,.el-pagination__sizes,.el-select,.el-select--mini,.el-pager{
+  font-size:25px !important;
+}
+.el-pagination button, .el-pagination span:not([class*=suffix]),.el-input--mini,.el-input__inner,.el-pager,.btn-prev,li.number{
+  font-size:25px !important;
+}
 </style>
