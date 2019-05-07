@@ -16,7 +16,7 @@ function test (user) {
     { path: '/test', icon: './imgs/icons/L_Bill.png', title: '完工汇报', secTitle: '待汇报' },
     { path: '/test', icon: './imgs/icons/L_Chart.png', title: '我的报表', secTitle: '报表数' },
     { path: '/test', icon: './imgs/icons/L_Cart4.png', title: '生产领料', secTitle: '任务数' },
-    { path: '/test', icon: './imgs/icons/L_Ruler.png', title: '质量检验', secTitle: '待检验' },
+    { path: '/IPQC/Testing', icon: './imgs/icons/L_Ruler.png', title: '质量检验', secTitle: '待检验' },
     { path: '/test', icon: './imgs/icons/L_Stock.png', title: '库存查询', secTitle: '物料类' },
     { path: '/test', icon: './imgs/icons/L_Scan.png', title: '条码打印', secTitle: '待检验' }
   ]

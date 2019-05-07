@@ -13,6 +13,16 @@ const routes = [
     path: '/DispatchedWork',
     name: 'DispatchedWork',
     component: () => import('../views/DispatchedWork/index.vue')
+  },
+  {
+    path: '/IPQC/Testing',
+    name: 'IPQC',
+    component: () => import('../views/IPQC/Testing.vue')
+  },
+  {
+    path: '/IPQC/Report',
+    name: 'IPQC',
+    component: () => import('../views/IPQC/Report.vue')
   }
 ]
 
