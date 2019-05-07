@@ -27,10 +27,10 @@
           </div>
         </div>
       </el-col>
-      <el-col :span="6">
+      <el-col :span="2">
         <div class="grid-content"></div>
       </el-col>
-      <el-col :span="6">
+      <el-col :span="10">
         <div class="grid-content" style="text-align: right;padding-right: 15px;">
           <el-button plain>取消</el-button>
           <el-button type="success" plain>提交</el-button>

@@ -54,4 +54,7 @@
 body{
   margin:0;
 }
+td,tr{
+  font-size: 17px;
+}
 </style>
