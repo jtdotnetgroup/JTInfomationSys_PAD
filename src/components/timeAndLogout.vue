@@ -1,16 +1,16 @@
 <template>
-    <el-row id="timeAndLogout">
-                    <el-col id="time" :span="14">
-                        <span>{{date}}
-                            </span><br/>
-                            <span>{{time}}</span>
-                    </el-col>
-                    <el-col :span="10">
-                        <div @click="logoutConfirm">
-                            <img :src="iconPath"/>
-                        </div>
-                    </el-col>
-                </el-row>
+  <el-row id="timeAndLogout">
+    <el-col id="time" :span="14">
+      <span>{{date}}</span>
+      <br>
+      <span>{{time}}</span>
+    </el-col>
+    <el-col :span="10">
+      <div @click="logoutConfirm">
+        <img :src="iconPath">
+      </div>
+    </el-col>
+  </el-row>
 </template>
 
 <script>
@@ -39,7 +39,7 @@ export default {
   },
   computed: {
     time () {
-      return this.$moment().format('HH:MM:SS')
+      return this.$moment().format('HH:mm:ss')
     },
     date () {
       return this.$moment().format('YYYY年MM月DD日')
@@ -49,8 +49,8 @@ export default {
 </script>
 
 <style scoped>
-        #timeAndLogout{
-        display: flex;
-        align-items: center;
-    }
+#timeAndLogout {
+  display: flex;
+  align-items: center;
+}
 </style>

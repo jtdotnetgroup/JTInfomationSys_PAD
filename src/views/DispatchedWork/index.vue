@@ -37,7 +37,7 @@ export default {
   name: 'DispatchedWork',
   data () {
     return {
-      title: '派工单',
+      title: '派工任务',
       tabItems: [
         { title: '待接收', value: 'receive', count: 123 },
         { title: '待汇报', value: 'report', count: 123 },

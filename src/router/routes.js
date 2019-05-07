@@ -15,7 +15,25 @@ const routes = [
     component: () => import('../views/DispatchedWork/index.vue')
   },
   {
-    path: '/IPQC/Testing',
+    path: '/Inspection',
+    name: 'Inspection',
+    component: () => import('../views/Inspection/index.vue')
+  },
+  {
+    path: '/Report',
+    name: 'Report',
+    component: () => import('../views/Report/index.vue')
+  }, {
+    path: '/Journaling',
+    name: 'Journaling',
+    component: () => import('../views/Journaling/index.vue')
+  }, {
+    path: '/Production',
+    name: 'Production',
+    component: () => import('../views/Production/index.vue')
+  },
+  {
+    path: '/IPQC',
     name: 'IPQC',
     component: () => import('../views/IPQC/Testing.vue')
   },
@@ -23,7 +41,18 @@ const routes = [
     path: '/IPQC/Report',
     name: 'IPQC',
     component: () => import('../views/IPQC/Report.vue')
+  },
+  {
+    path: '/Stock',
+    name: 'Stock',
+    component: () => import('../views/Stock/index.vue')
+  },
+  {
+    path: '/BarCode',
+    name: 'BarCode',
+    component: () => import('../views/BarCode/index.vue')
   }
+
 ]
 
 export default routes
