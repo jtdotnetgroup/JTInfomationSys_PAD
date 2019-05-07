@@ -1,9 +1,10 @@
 <template>
   <el-row id="timeAndLogout">
-    <el-col id="time" :span="14">
-      <span>{{date}}</span>
-      <br>
-      <span>{{time}}</span>
+    <el-col :span="14">
+      <span class="time">工号：{{WorkCode}}</span>
+       <br>
+      <span class="time">{{strdate}}</span>
+      <span class="time">{{strtime}}</span>
     </el-col>
     <el-col :span="10">
       <div @click="logoutConfirm">
@@ -17,7 +18,10 @@
 export default {
   data () {
     return {
-      iconPath: './imgs/icons/L_Shutdown2.png'
+      WorkCode: '1001',
+      iconPath: './imgs/icons/L_Shutdown2.png',
+      strdate: this.$moment().format('YYYY年MM月DD日'),
+      strtime: this.$moment().format('HH:mm:ss')
     }
   },
   methods: {
@@ -33,17 +37,15 @@ export default {
     },
     logout () {
       this.$store.dispatch('account/Logout')
-
       this.$router.replace('/login')
+    },
+    timer () {
+      this.strdate = this.$moment().format('YYYY年MM月DD日')
+      this.strtime = this.$moment().format('HH:mm:ss')
     }
   },
-  computed: {
-    time () {
-      return this.$moment().format('HH:mm:ss')
-    },
-    date () {
-      return this.$moment().format('YYYY年MM月DD日')
-    }
+  created: function () {
+    setInterval(this.timer, 1000)
   }
 }
 </script>
@@ -52,5 +54,9 @@ export default {
 #timeAndLogout {
   display: flex;
   align-items: center;
+}
+.time{
+  font-size: 18px;
+  color: white;
 }
 </style>
