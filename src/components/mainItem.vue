@@ -4,7 +4,7 @@
             <img :src="icon" />
             <div id="title">
                 <span>{{title}}</span>
-            </div>
+            </div>x
             <hr/>
             <div id="secTitle">
                 <span>

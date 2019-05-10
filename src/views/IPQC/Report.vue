@@ -1,6 +1,6 @@
 <template>
   <div class="fullscreen">
-   <tableHeader class="header" :title="title" :items="tabItems" @tabChange="handelTabChange"/>
+    <tableHeader class="header" :title="title" :items="tabItems" @tabChange="handelTabChange"/>
     <el-row style="background-color: white;
     padding: 20px 0px;">
       <el-col :span="2">
@@ -23,14 +23,14 @@
       <el-col :span="4">
         <div class="grid-content">
           <div class="demo-input-suffix">
-            <el-input v-model="StepNum" placeholder="请输入工序"></el-input>
+            <el-input v-model="Step" placeholder="请输入工序"></el-input>
           </div>
         </div>
       </el-col>
-      <el-col :span="4">
+      <el-col :span="2">
         <div class="grid-content"></div>
       </el-col>
-      <el-col :span="8">
+      <el-col :span="10">
         <div class="grid-content" style="text-align: right;padding-right: 15px;">
           <el-button plain>取消</el-button>
           <el-button type="success" plain>提交</el-button>
@@ -123,8 +123,13 @@ export default {
   name: 'IPQC',
   data () {
     return {
-      StepNum: '',
+      title: '质检汇报',
+      tabItems: [
+        { title: '质检汇报', value: 'ZJHB', count: 0 }
+      ],
+      tabvalue: 'ZJHB',
       CodeNum: '',
+      Step: '',
       BadItem: [
         { type: '毛刺', num: 5, typecolor: 'back', numcolor: 'back' },
         { type: '斜面', num: 5, typecolor: 'back', numcolor: 'back' },
@@ -142,17 +147,7 @@ export default {
         { type: '检验数', num: 5, typecolor: 'back', numcolor: 'back' },
         { type: '合格数', num: 4, typecolor: 'back', numcolor: 'back' },
         { type: '不合格', num: 1, typecolor: 'red', numcolor: 'red' }
-      ],
-      title: '质检汇报',
-      tabItems: [
-        { title: '质检汇报', value: 'receive', count: 123 }
-      ],
-      tabledata: [],
-      currentPage: 1,
-      pageSize: 20,
-      totalNum: 100,
-      tabvalue: 'receive',
-      tableColumns: columns
+      ]
     }
   },
   components: {
@@ -170,14 +165,8 @@ export default {
   computed: {
     columnHeader () {
       switch (this.tabvalue) {
-        case 'receive': {
-          return this.tableColumns.receive
-        }
-        case 'report': {
-          return this.tableColumns.report
-        }
-        case 'finished': {
-          return this.tableColumns.finished
+        case 'ZJHB': {
+          return this.tableColumns.ZJHB
         }
       }
       return ''
