@@ -1,5 +1,6 @@
 
 <template>
+  <!--主体-->
   <div class="fullscreen">
     <!--头部-->
     <tableHeader class="header" :title="title" :items="tabItems" @tabChange="handelTabChange"/>
@@ -53,7 +54,7 @@
             <el-option label="20180420-003;" value="20180420-003;"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注：">
+        <el-form-item label="备注：">
           <el-input type="textarea" rows="4" v-model="form.desc"></el-input>
         </el-form-item>
         <el-form-item>
@@ -95,8 +96,8 @@
 </template>
 
 <script>
+// 数据获取
 import { GetAll } from '@/api/mission'
-
 // 表格列
 import columns from './tableColumns.js'
 // 派工单页面
