@@ -61,11 +61,37 @@ table{
   position: fixed;bottom: 0px;text-align: center;
 }
 .el-pagination__total,.el-pagination__sizes,.el-select,.el-select--mini,.el-pager{
-  font-size:25px !important;
+  font-size:50px !important;
 }
 .el-pagination button, .el-pagination span:not([class*=suffix]),.el-input--mini,.el-input__inner,.el-pager,.btn-prev,li.number{
-  font-size:25px !important;}
+  font-size:50px !important;}
 td,tr{
   font-size: 17px;
+}
+.el-pagination {
+    white-space: nowrap;
+    padding: 2px 5px;
+    color: #303133;
+    font-weight: 700;
+    position: fixed;
+    left: 0px;
+    right: 0px;
+}
+.el-pager li{
+      height: 50px !important;
+    line-height: 50px !important;
+}
+.el-pagination.is-background .el-pager li{
+   min-width: 50px !important;
+}
+.el-pagination.is-background .btn-prev,.el-pagination.is-background .btn-next{
+  min-width: 50px !important;
+}
+.el-pagination button{
+  height: 50px !important;
+    line-height: 50px !important;
+}
+.el-pagination .btn-next .el-icon, .el-pagination .btn-prev .el-icon{
+  font-size: 35px!important;
 }
 </style>

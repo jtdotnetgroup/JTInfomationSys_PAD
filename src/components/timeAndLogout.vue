@@ -2,7 +2,7 @@
   <el-row id="timeAndLogout">
     <el-col :span="14">
       <span class="time">工号：{{WorkCode}}</span>
-       <br>
+      <br>
       <span class="time">{{strdate}}</span>
       <span class="time">{{strtime}}</span>
     </el-col>
@@ -26,14 +26,20 @@ export default {
   },
   methods: {
     logoutConfirm () {
-      this.$confirm('确定要退出系统并注销吗？', '确认', {
+      this.$confirm('确定要退出系统并注销吗？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'question',
-        callback: action => {
-          this.logout()
-        }
+        type: 'warning'
       })
+        .then(() => {
+          this.logout()
+        })
+        .catch(() => {
+          // this.$message({
+          //   type: "info",
+          //   message: "已取消退出"
+          // });
+        })
     },
     logout () {
       this.$store.dispatch('account/Logout')
@@ -55,7 +61,7 @@ export default {
   display: flex;
   align-items: center;
 }
-.time{
+.time {
   font-size: 18px;
   color: white;
 }
