@@ -15,3 +15,29 @@ export function GetMx (url, params) {
     params: params
   })
 }
+// 数据添加
+export function DataAdd (url, params) {
+  return axios({
+    url: url,
+    method: 'POST',
+    params: params
+  })
+}
+
+// 数据删除
+export function DataDel (url, params) {
+  return axios({
+    url: url,
+    method: 'DELETE',
+    params: params
+  })
+}
+
+// 数据更改
+export function DataPUT (url, params) {
+  return axios({
+    url: url,
+    method: 'PUT',
+    params: params
+  })
+}

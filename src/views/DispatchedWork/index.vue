@@ -6,8 +6,15 @@
     <tableHeader class="header" :title="title" :items="tabItems" @tabChange="handelTabChange"/>
     <!--表格-->
     <el-table :data="tabledata" border stripe>
-      <el-table-column v-for="col in columnHeader" :prop="col.id" :key="col.id" :label="col.label"></el-table-column>
-      <el-table-column label="操作">
+      <el-table-column
+        v-for="col in columnHeader"
+        :prop="col.id"
+        :key="col.id"
+        :label="col.label"
+        :width="col.width"
+        v-show="false"
+      ></el-table-column>
+      <el-table-column label="操作" fixed="right">
         <template slot-scope="scope">
           <el-button plain @click="handle(0,scope.$index, scope.row)">汇报</el-button>
           <el-button plain @click="handle(1,scope.$index, scope.row)">领料</el-button>
@@ -28,27 +35,53 @@
       background
     ></el-pagination>
     <!--弹框-->
-    <el-dialog title="汇报" :visible.sync="dialoghandle0">
+    <el-dialog title="汇报" :visible.sync="dialoghandle0" width="30%">
       <el-form ref="form" :model="form">
-        <el-form-item label placeholder="派工数">
-          <el-input v-model="form.name"></el-input>
+        <el-form-item label>
+          <el-input v-model="form.name" placeholder="派工数"></el-input>
         </el-form-item>
-        <el-button round v-for="(value, index) in inputNum1" :key="index">{{value}}</el-button>
+        <el-button
+          round
+          v-for="(value, index) in inputNum1"
+          :key="index"
+          @click="AddWZ({value})"
+        >{{value}}</el-button>
         <br>
         <br>
-        <el-button round v-for="(value, index) in inputNum2" :key="index">{{value}}</el-button>
+        <el-button
+          round
+          v-for="(value, index) in inputNum2"
+          :key="index"
+          @click="AddWZ({value})"
+        >{{value}}</el-button>
         <br>
         <br>
-        <el-button round v-for="(value, index) in inputNum3" :key="index">{{value}}</el-button>
+        <el-button
+          round
+          v-for="(value, index) in inputNum3"
+          :key="index"
+          @click="AddWZ({value})"
+        >{{value}}</el-button>
+        <br>
+        <br>
+        <el-button type="danger" plain round @click="DELWZ()">删除</el-button>
+        <el-button type="primary" plain round>汇报</el-button>
       </el-form>
     </el-dialog>
-    <el-dialog title="开工报告" :visible.sync="dialoghandle2">
+    <el-dialog title="领料" :visible.sync="dialoghandle1" width="30%">
       <el-form ref="form" :model="form">
+        <el-form-item style="text-align:right;">
+          <el-button @click="dialoghandle1 = false">取消</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+    <el-dialog title="开工报告" :visible.sync="dialoghandle2" width="30%">
+      <el-form ref="form" :model="form" label-position="top" style="text-align: left;">
         <el-form-item label="材 料 码：">
           <el-input type="textarea" :rows="4" v-model="form.desc"></el-input>
         </el-form-item>
         <el-form-item label="材料批次：">
-          <el-select v-model="form.region" size="large" placeholder>
+          <el-select v-model="form.region" size="large">
             <el-option label="20180420-001;" value="20180420-001;"></el-option>
             <el-option label="20180420-002;" value="20180420-002;"></el-option>
             <el-option label="20180420-003;" value="20180420-003;"></el-option>
@@ -57,14 +90,14 @@
         <el-form-item label="备注：">
           <el-input type="textarea" rows="4" v-model="form.desc"></el-input>
         </el-form-item>
-        <el-form-item>
+        <el-form-item style="text-align:right;">
           <el-button type="primary" @click="BCAnalysis">条码解析</el-button>
           <el-button @click="onSubmit">保存提交</el-button>
           <el-button @click="dialoghandle2 = false">取消</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
-    <el-dialog title="异常报告" :visible.sync="dialoghandle3">
+    <el-dialog title="异常报告" :visible.sync="dialoghandle3" width="30%">
       <el-form ref="form1" :model="form1">
         <el-form-item label="异常原因：" prop="type">
           <el-checkbox-group v-model="form1.type">
@@ -84,7 +117,7 @@
         <el-form-item label="恢复时间：" prop="HFtime">
           <el-input v-model="form1.HFtime"></el-input>
         </el-form-item>
-        <el-form-item>
+        <el-form-item style="text-align:right;">
           <el-button type="danger">异常</el-button>
           <el-button type="success">恢复</el-button>
           <el-button @click="dialoghandle3 = false">取消</el-button>
@@ -112,6 +145,46 @@ export default {
         { title: '待汇报', value: 'report', count: 3 }
       ],
       tabledata: [
+        {
+          billno: '20180718-01',
+          device: '1#',
+          product: '名称:XXXXXXX 规格型号:XXXXXX',
+          startendtime: '加硫',
+          planqty: '9:30-10:30',
+          planqty1: '500'
+        },
+        {
+          billno: '20180718-01',
+          device: '1#',
+          product: '名称:XXXXXXX 规格型号:XXXXXX',
+          startendtime: '加硫',
+          planqty: '9:30-10:30',
+          planqty1: '500'
+        },
+        {
+          billno: '20180718-01',
+          device: '1#',
+          product: '名称:XXXXXXX 规格型号:XXXXXX',
+          startendtime: '加硫',
+          planqty: '9:30-10:30',
+          planqty1: '500'
+        },
+        {
+          billno: '20180718-01',
+          device: '1#',
+          product: '名称:XXXXXXX 规格型号:XXXXXX',
+          startendtime: '加硫',
+          planqty: '9:30-10:30',
+          planqty1: '500'
+        },
+        {
+          billno: '20180718-01',
+          device: '1#',
+          product: '名称:XXXXXXX 规格型号:XXXXXX',
+          startendtime: '加硫',
+          planqty: '9:30-10:30',
+          planqty1: '500'
+        },
         {
           billno: '20180718-01',
           device: '1#',
@@ -189,9 +262,18 @@ export default {
   },
   // 声明方法
   methods: {
+    Refresh () {
+      this.GetData()
+    },
+    AddWZ (obj) {
+      this.form.name = this.form.name + obj.value
+    },
+    DELWZ () {
+      this.form.name = this.form.name.slice(0, this.form.name.length - 1)
+    },
     // 点击操作
     handle: function (type, index, row) {
-      console.log(index, row.billno)
+      console.log(index, row)
       switch (type) {
         // 汇报
         case 0: {
@@ -221,10 +303,16 @@ export default {
     },
     sizeChange (value) {},
     currentChange (value) {},
-    GetData (Status) {
+    GetData () {
+      var Status = 0
+      if (this.tabvalue === 'receive') {
+        Status = 0
+      } else {
+        Status = 1
+      }
       var obj = {
         操作者: '1',
-        FStatus: 1,
+        FStatus: Status,
         FClosed: null,
         Sorting: 'FClosed',
         SkipCount: this.currentPage,
@@ -240,9 +328,10 @@ export default {
           this.totalNum = result.totalCount // 总长度
           var TabaleObj = {} // 对象
           var TableList = [] // 集合
-          console.log(TabaleObj.派工单号) // 总长度
+
           // 遍历返回集合 选取需要的
           result.items.forEach(item => {
+            TabaleObj.fTranType = item.fTranType
             TabaleObj.派工单号 = item.派工单号
             TabaleObj.设备 = item.设备
             TabaleObj.产品名称 = item.产品名称
@@ -250,7 +339,8 @@ export default {
             TabaleObj.规格型号 = item.规格型号
             TabaleObj.工序 = item.工序
             TabaleObj.生产日期 = item.生产日期
-            TabaleObj.派工数量 = item.派工数量
+            TabaleObj.派工 = item.派工数量
+            TabaleObj.汇报 = item.汇报数量
             TableList.push(TabaleObj)
           })
           // 重新渲染列表
@@ -266,22 +356,28 @@ export default {
   created: function () {},
   // 页面渲染后 执行
   mounted: function () {
-    this.GetData(0)
+    this.GetData()
   },
   // 页面渲染后 执行
   computed: {
     columnHeader () {
+      // if (this.tabvalue === 'receive') {
+      //   this.tabvalue = 'receive'
+      // }
+      // if (this.tabvalue === 'report') {
+      //   this.tabvalue = 'report'
+      // }
+      this.GetData()
       switch (this.tabvalue) {
-        case 'receive': {
-          this.GetData(0)
+        case 'receive':
           return this.tableColumns.receive
-        }
-        case 'report': {
-          this.GetData(1)
+          // break
+        case 'report':
           return this.tableColumns.report
-        }
+          // break
+        default:
+          return ''
       }
-      return ''
     }
   },
   //
@@ -290,4 +386,7 @@ export default {
 </script>
 
 <style scoped>
+.el-select {
+  width: 100%;
+}
 </style>

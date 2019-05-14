@@ -1,12 +1,12 @@
 <template>
   <el-row id="timeAndLogout">
-    <el-col :span="14">
+    <el-col :span="16">
       <span class="time">工号：{{WorkCode}}</span>
       <br>
       <span class="time">{{strdate}}</span>
       <span class="time">{{strtime}}</span>
     </el-col>
-    <el-col :span="10">
+    <el-col :span="8">
       <div @click="logoutConfirm">
         <img :src="iconPath">
       </div>
@@ -15,13 +15,14 @@
 </template>
 
 <script>
+import { account } from '@/store/module/account'
 export default {
   data () {
     return {
       WorkCode: '1001',
       iconPath: './imgs/icons/L_Shutdown2.png',
       strdate: this.$moment().format('YYYY年MM月DD日'),
-      strtime: this.$moment().format('HH:mm:ss')
+      strtime: this.$moment().format('HH:mm')
     }
   },
   methods: {
@@ -47,11 +48,11 @@ export default {
     },
     timer () {
       this.strdate = this.$moment().format('YYYY年MM月DD日')
-      this.strtime = this.$moment().format('HH:mm:ss')
+      this.strtime = this.$moment().format('HH:mm')
     }
   },
   created: function () {
-    setInterval(this.timer, 1000)
+    setInterval(this.timer, 60000)
   }
 }
 </script>
