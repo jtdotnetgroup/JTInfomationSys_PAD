@@ -35,10 +35,10 @@
       background
     ></el-pagination>
     <!--弹框-->
-    <el-dialog title="汇报" :visible.sync="dialoghandle0" width="30%">
-      <el-form ref="form" :model="form">
+    <el-dialog title="汇报" :visible.sync="dialoghandle0" width="30%" v-loading="HBloading">
+      <el-form ref="form" :model="HBFrom">
         <el-form-item label>
-          <el-input v-model="form.name" placeholder="派工数"></el-input>
+          <el-input v-model="HBFrom.FFinishAuxQty" placeholder="派工数"></el-input>
         </el-form-item>
         <el-button
           round
@@ -65,12 +65,13 @@
         <br>
         <br>
         <el-button type="danger" plain round @click="DELWZ()">删除</el-button>
-        <el-button type="primary" plain round>汇报</el-button>
+        <el-button type="primary" plain round @click="onSubmit('HB')">汇报</el-button>
       </el-form>
     </el-dialog>
     <el-dialog title="领料" :visible.sync="dialoghandle1" width="30%">
       <el-form ref="form" :model="form">
         <el-form-item style="text-align:right;">
+          <el-button @click="onSubmit('BC')">保存</el-button>
           <el-button @click="dialoghandle1 = false">取消</el-button>
         </el-form-item>
       </el-form>
@@ -92,34 +93,35 @@
         </el-form-item>
         <el-form-item style="text-align:right;">
           <el-button type="primary" @click="BCAnalysis">条码解析</el-button>
-          <el-button @click="onSubmit">保存提交</el-button>
+          <el-button @click="onSubmit('KG')">保存提交</el-button>
           <el-button @click="dialoghandle2 = false">取消</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
     <el-dialog title="异常报告" :visible.sync="dialoghandle3" width="30%">
-      <el-form ref="form1" :model="form1">
-        <el-form-item label="异常原因：" prop="type">
-          <el-checkbox-group v-model="form1.type">
-            <el-checkbox label="人员请假" name="type"></el-checkbox>
-            <el-checkbox label="设备异常" name="type"></el-checkbox>
-            <el-checkbox label="材料异常" name="type"></el-checkbox>
-            <el-checkbox label="人员调用" name="type"></el-checkbox>
-            <el-checkbox label="其他原因" name="type"></el-checkbox>
-          </el-checkbox-group>
+      <el-form ref="YCFrom" :model="YCFrom">
+        <el-form-item label="异常原因：" prop="FRemark">
+          <el-radio-group v-model="YCFrom.FRemark">
+            <el-radio
+              v-for="FRemark in FRemarkOptions"
+              :label="FRemark"
+              :key="FRemark"
+              name="FRemark"
+            >{{FRemark}}</el-radio>
+          </el-radio-group>
         </el-form-item>
-        <el-form-item label="报告人：" prop="name">
-          <el-input v-model="form1.name"></el-input>
+        <el-form-item label="报告人：" prop="FBiller">
+          <el-input v-model="YCFrom.FBiller"></el-input>
         </el-form-item>
-        <el-form-item label="报告时间：" prop="BGtime">
-          <el-input v-model="form1.BGtime"></el-input>
+        <el-form-item label="报告时间：" prop="FTime">
+          <el-input v-model="YCFrom.FTime"></el-input>
         </el-form-item>
-        <el-form-item label="恢复时间：" prop="HFtime">
-          <el-input v-model="form1.HFtime"></el-input>
+        <el-form-item label="恢复时间：" prop="FRecoverTime">
+          <el-input v-model="YCFrom.FRecoverTime"></el-input>
         </el-form-item>
         <el-form-item style="text-align:right;">
-          <el-button type="danger">异常</el-button>
-          <el-button type="success">恢复</el-button>
+          <el-button type="danger" @click="onSubmit('YC')">异常</el-button>
+          <el-button type="success" @click="onSubmit('HF')">恢复</el-button>
           <el-button @click="dialoghandle3 = false">取消</el-button>
         </el-form-item>
       </el-form>
@@ -129,8 +131,8 @@
 </template>
 
 <script>
-// 数据获取
-import { GetAll } from '@/api/mission'
+// 数据处理
+import { GetAll, DataPUT, DataAddOrPUT } from '@/api/mission'
 // 表格列
 import columns from './tableColumns.js'
 // 派工单页面
@@ -139,102 +141,44 @@ export default {
   // 初始化数据
   data () {
     return {
-      title: '派工任务',
+      title: '派工任务', // 标题
       tabItems: [
         { title: '待开工', value: 'receive', count: 6 },
         { title: '待汇报', value: 'report', count: 3 }
       ],
-      tabledata: [
-        {
-          billno: '20180718-01',
-          device: '1#',
-          product: '名称:XXXXXXX 规格型号:XXXXXX',
-          startendtime: '加硫',
-          planqty: '9:30-10:30',
-          planqty1: '500'
-        },
-        {
-          billno: '20180718-01',
-          device: '1#',
-          product: '名称:XXXXXXX 规格型号:XXXXXX',
-          startendtime: '加硫',
-          planqty: '9:30-10:30',
-          planqty1: '500'
-        },
-        {
-          billno: '20180718-01',
-          device: '1#',
-          product: '名称:XXXXXXX 规格型号:XXXXXX',
-          startendtime: '加硫',
-          planqty: '9:30-10:30',
-          planqty1: '500'
-        },
-        {
-          billno: '20180718-01',
-          device: '1#',
-          product: '名称:XXXXXXX 规格型号:XXXXXX',
-          startendtime: '加硫',
-          planqty: '9:30-10:30',
-          planqty1: '500'
-        },
-        {
-          billno: '20180718-01',
-          device: '1#',
-          product: '名称:XXXXXXX 规格型号:XXXXXX',
-          startendtime: '加硫',
-          planqty: '9:30-10:30',
-          planqty1: '500'
-        },
-        {
-          billno: '20180718-01',
-          device: '1#',
-          product: '名称:XXXXXXX 规格型号:XXXXXX',
-          startendtime: '加硫',
-          planqty: '9:30-10:30',
-          planqty1: '500'
-        },
-        {
-          billno: '20180718-01',
-          device: '1#',
-          product: '名称:XXXXXXX 规格型号:XXXXXX',
-          startendtime: '加硫',
-          planqty: '9:30-10:30',
-          planqty1: '500'
-        },
-        {
-          billno: '20180718-01',
-          device: '1#',
-          product: '名称:XXXXXXX 规格型号:XXXXXX',
-          startendtime: '加硫',
-          planqty: '9:30-10:30',
-          planqty1: '500'
-        },
-        {
-          billno: '20180718-01',
-          device: '1#',
-          product: '名称:XXXXXXX 规格型号:XXXXXX',
-          startendtime: '加硫',
-          planqty: '9:30-10:30',
-          planqty1: '500'
-        },
-        {
-          billno: '20180718-01',
-          device: '1#',
-          product: '名称:XXXXXXX 规格型号:XXXXXX',
-          startendtime: '加硫',
-          planqty: '9:30-10:30',
-          planqty1: '500'
-        }
+      tabledata: [], // 数据集合
+      currentPage: 0, // 当前页数
+      pageSize: 20, // 页容量
+      totalNum: 0, // 总条数
+      tabvalue: 'receive', // 选中显示卡
+      tableColumns: columns, // 表格的列
+      dialoghandle0: false, //
+      dialoghandle1: false, //
+      dialoghandle2: false, //
+      dialoghandle3: false, //
+      HBFrom: {
+        // 汇报
+        FID: 0,
+        FFinishAuxQty: 0
+      },
+      YCFrom: {
+        // 异常
+        FID: '',
+        FSrcID: '',
+        FBiller: '',
+        FTime: '',
+        FRemark: '',
+        FRecoverTime: '',
+        FNote: ''
+      },
+      FRemarkOptions: [
+        '人员请假',
+        '设备异常',
+        '材料异常',
+        '人员调用',
+        '其他原因'
       ],
-      currentPage: 0,
-      pageSize: 20,
-      totalNum: 0,
-      tabvalue: 'receive',
-      tableColumns: columns,
-      dialoghandle0: false,
-      dialoghandle1: false,
-      dialoghandle2: false,
-      dialoghandle3: false,
+      HBloading: false,
       form: {
         name: '',
         region: '',
@@ -262,14 +206,58 @@ export default {
   },
   // 声明方法
   methods: {
+    onSubmit (obj) {
+      console.log(obj)
+      switch (obj) {
+        case 'HB': {
+          this.HBloading = true
+          DataPUT('ICMODispBill/UpdateFFinishAuxQty', this.HBFrom).then(
+            res => {
+              console.log(res)
+              this.$notify({
+                title: '系统提示',
+                message: '修改成功',
+                type: 'success'
+              })
+            },
+            response => {
+              console.log('error')
+            }
+          )
+          this.HBloading = false
+          break
+        }
+        case 'YC': {
+          this.HBloading = true
+          DataAddOrPUT('ICException/CreateAndUpdate', this.YCFrom).then(
+            res => {
+              console.log(res)
+              this.$notify({
+                title: '系统提示',
+                message: '修改成功',
+                type: 'success'
+              })
+            },
+            response => {
+              console.log('error')
+            }
+          )
+          this.HBloading = false
+          break
+        }
+      }
+    },
     Refresh () {
       this.GetData()
     },
     AddWZ (obj) {
-      this.form.name = this.form.name + obj.value
+      this.HBFrom.FFinishAuxQty = this.HBFrom.FFinishAuxQty + '' + obj.value
     },
     DELWZ () {
-      this.form.name = this.form.name.slice(0, this.form.name.length - 1)
+      this.HBFrom.FFinishAuxQty = this.HBFrom.FFinishAuxQty.slice(
+        0,
+        this.HBFrom.FFinishAuxQty.length - 1
+      )
     },
     // 点击操作
     handle: function (type, index, row) {
@@ -277,6 +265,8 @@ export default {
       switch (type) {
         // 汇报
         case 0: {
+          this.HBFrom.FFinishAuxQty = row.汇报
+          this.HBFrom.FID = row.FID
           this.dialoghandle0 = true
           break
         }
@@ -292,6 +282,28 @@ export default {
         }
         // 异常
         case 3: {
+          this.YCFrom.FID = row.FID
+          this.YCFrom.FSrcID = row.FSrcID
+          var obj = { FID: row.FID, FSrcID: row.FSrcID }
+
+          GetAll('ICException/Get', obj).then(
+            res => {
+              console.log(res) // 返回对象
+              if (res.status === 200) {
+                console.log(200) // 返回对象
+                var result = res.data.result
+                // 异常
+                this.YCFrom.FBiller = result.fBiller
+                this.YCFrom.FTime = result.fTime
+                this.YCFrom.FRemark = result.fRemark
+                this.YCFrom.FRecoverTime = result.fRecoverTime
+                this.YCFrom.FNote = result.fNote
+              }
+            },
+            response => {
+              console.log('error')
+            }
+          )
           this.dialoghandle3 = true
           break
         }
@@ -304,15 +316,15 @@ export default {
     sizeChange (value) {},
     currentChange (value) {},
     GetData () {
-      var Status = 0
-      if (this.tabvalue === 'receive') {
-        Status = 0
-      } else {
-        Status = 1
-      }
+      // var Status = 0;
+      // if (this.tabvalue === "receive") {
+      //   Status = 0;
+      // } else {
+      //   Status = 1;
+      // }
       var obj = {
         操作者: '1',
-        FStatus: Status,
+        FStatus: this.tabvalue === 'receive' ? 0 : 1,
         FClosed: null,
         Sorting: 'FClosed',
         SkipCount: this.currentPage,
@@ -341,6 +353,8 @@ export default {
             TabaleObj.生产日期 = item.生产日期
             TabaleObj.派工 = item.派工数量
             TabaleObj.汇报 = item.汇报数量
+            TabaleObj.FID = item.fid
+            TabaleObj.FSrcID = item.fsrcID
             TableList.push(TabaleObj)
           })
           // 重新渲染列表
@@ -371,10 +385,10 @@ export default {
       switch (this.tabvalue) {
         case 'receive':
           return this.tableColumns.receive
-          // break
+        // break
         case 'report':
           return this.tableColumns.report
-          // break
+        // break
         default:
           return ''
       }

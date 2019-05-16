@@ -38,6 +38,20 @@ export function DataPUT (url, params) {
   return axios({
     url: url,
     method: 'PUT',
-    params: params
+    data: params,
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8'
+    }
+  })
+}
+// 数据添加和修改
+export function DataAddOrPUT (url, params) {
+  return axios({
+    url: url,
+    method: 'POST',
+    data: params,
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8'
+    }
   })
 }
