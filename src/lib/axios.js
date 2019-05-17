@@ -3,9 +3,19 @@ import axios from 'axios'
 import { Message } from 'element-ui'
 import { account } from '@/store/module/account'
 Vue.use(axios)
-
+//
+var url = window.location.host
+var baseURL = ''
+if (url.indexOf('http://222.72.134.71') >= 0) {
+  baseURL = 'http://222.72.134.71:8093'
+} else if (url.indexOf('localhost') >= 0) {
+// 开发环境
+  baseURL = 'http://localhost:21021'
+} else {
+  baseURL = 'http://222.72.134.71:8093'
+}
 const http = axios.create({
-  baseURL: 'http://localhost:21021/api/services/app/'
+  baseURL: baseURL + '/api/services/app/'
 })
 
 axios.interceptors.request.use(function (config) {
