@@ -245,6 +245,24 @@ export default {
           this.HBloading = false
           break
         }
+        case 'HF': {
+          this.HBloading = true
+          DataAddOrPUT('ICException/CreateAndUpdate', this.YCFrom).then(
+            res => {
+              console.log(res)
+              this.$notify({
+                title: '系统提示',
+                message: '修改成功',
+                type: 'success'
+              })
+            },
+            response => {
+              console.log('error')
+            }
+          )
+          this.HBloading = false
+          break
+        }
       }
     },
     Refresh () {
