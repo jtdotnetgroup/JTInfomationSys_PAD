@@ -15,7 +15,7 @@ const menus = {
   actions: {
     // 根据用户信息获取菜单列表
     getList ({ commit }, user) {
-      console.log(user)
+      // console.log(user)
       var items = getList(user)
       commit('updateMenus', items)
     }

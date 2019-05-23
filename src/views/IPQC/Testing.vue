@@ -84,9 +84,9 @@ export default {
       }
       GetAll('VW_MODispBillList/GetAll', obj).then(
         res => {
-          console.log(res) // 返回对象
-          console.log(res.data.result.items) // 集合
-          console.log(res.data.result.totalCount) // 总长度
+          // console.log(res) // 返回对象
+          // console.log(res.data.result.items) // 集合
+          // console.log(res.data.result.totalCount) // 总长度
 
           var result = res.data.result // 集合
           this.totalNum = result.totalCount // 总长度
@@ -115,7 +115,7 @@ export default {
         },
         response => {
           this.loading = false
-          console.log('error')
+          // console.log('error')
         }
       )
     }
