@@ -334,12 +334,8 @@ export default {
     sizeChange (value) {},
     currentChange (value) {},
     GetData () {
-      // var Status = 0;
-      // if (this.tabvalue === "receive") {
-      //   Status = 0;
-      // } else {
-      //   Status = 1;
-      // }
+      var _this = this
+      _this.tabledata = []
       var obj = {
         操作者: '1',
         FStatus: this.tabvalue === 'receive' ? 0 : 1,
@@ -350,17 +346,20 @@ export default {
       }
       GetAll('VW_MODispBillList/GetAll', obj).then(
         res => {
+          if (res.success) {
+          }
           console.log(res) // 返回对象
           console.log(res.data.result.items) // 集合
           console.log(res.data.result.totalCount) // 总长度
 
           var result = res.data.result // 集合
           this.totalNum = result.totalCount // 总长度
-          var TabaleObj = {} // 对象
+
           var TableList = [] // 集合
 
           // 遍历返回集合 选取需要的
           result.items.forEach(item => {
+            var TabaleObj = {} // 对象
             TabaleObj.fTranType = item.fTranType
             TabaleObj.派工单号 = item.派工单号
             TabaleObj.设备 = item.设备

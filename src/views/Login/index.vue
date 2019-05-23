@@ -25,7 +25,9 @@
 </template>
 
 <script>
-import UserInfo from '@/config/UserInfo.js'
+import axios from 'axios'
+import { UserInfo } from '@/config/UserInfo.js'
+// Vue.use(axios);
 export default {
   name: 'login',
   data () {
@@ -45,23 +47,64 @@ export default {
   },
   methods: {
     onSubmit () {
+      var _this = this
       this.$refs['form'].validate(valid => {
         if (valid) {
-          this.$store
-            .dispatch('account/Login', {
-              username: this.form.username,
+          const loading = _this.$loading({
+            lock: true,
+            text: '登录中',
+            spinner: 'el-icon-loading',
+            background: 'rgba(0, 0, 0, 0.7)'
+          })
+
+          axios
+            .post('http://192.168.1.207:21021/api/TokenAuth/Authenticate', {
+              usernameOrEmailAddress: this.form.username,
               password: this.form.password
             })
-            .then(
-              response => {
-                // 登录成功
-                this.$router.push('/')
-              },
-              () => {
-                // 登录失败
-                console.log('登录失败')
+            .then(res => {
+              if (res.data.success) {
+                var result = res.data.result
+                var obj = {
+                  accessToken: result.accessToken,
+                  encryptedAccessToken: result.encryptedAccessToken,
+                  expireInSeconds: result.expireInSeconds,
+                  userId: result.userId
+                }
+                this.$message({
+                  message: '登录成功！',
+                  type: 'success',
+                  duration: 500
+                })
+                setInterval(_this.$router.push('/'), 3000)
+              } else {
+                _this.$message.error('账号与密码不匹配')
               }
-            )
+              setTimeout(() => {
+                loading.close()
+              }, 2000)
+            })
+            // .catch(err => {
+            //   loading.close()
+
+          //   _this.$message.error('账号与密码不匹配')
+          // })
+          // this.$store
+          //   .dispatch('account/Login', {
+          //     username: this.form.username,
+          //     password: this.form.password
+          //   })
+          //   .then(
+          //     res => {
+          //       console.log(res)
+          //       // 登录成功
+          //       this.$router.push('/')
+          //     },
+          //     () => {
+          //       // 登录失败
+          //       console.log('登录失败')
+          //     }
+          //   )
         } else {
         }
       })
@@ -87,6 +130,7 @@ export default {
   align-items: center;
   background: rgb(55, 162, 233);
   justify-content: center;
+  background-image: url("/public/imgs/basic/timg.jpg") no-repeat;
 }
 .el-form {
   flex-grow: 1;

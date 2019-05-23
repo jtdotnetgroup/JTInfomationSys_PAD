@@ -4,7 +4,6 @@
         <mid  id="mid"/>
         <bottom id="bottom" />
     </div>
-
 </template>
 
 <script>

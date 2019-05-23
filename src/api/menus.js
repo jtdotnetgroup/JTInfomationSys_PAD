@@ -1,11 +1,6 @@
 import axios from '@/lib/axios'
 
 export function getList (user) {
-  // axios({
-
-  // }).then(res => {
-  //   return res.data
-  // })
   return test(user)
 }
 
@@ -20,6 +15,5 @@ function test (user) {
     { path: '/Stock', icon: './imgs/icons/L_Stock.png', title: '库存查询', secTitle: '缺料类' },
     { path: '/BarCode', icon: './imgs/icons/L_Scan.png', title: '条码打印', secTitle: '待检验' }
   ]
-
   return data
 }

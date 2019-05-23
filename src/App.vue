@@ -7,9 +7,6 @@
 </template>
 
 <style>
-@media screen (max-width: 1000; and) {
-}
-
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
