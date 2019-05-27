@@ -55,3 +55,11 @@ export function DataAddOrPUT (url, params) {
     }
   })
 }
+// 数据添加和修改
+export function AddOrPUT (url, params) {
+  if (params.id === 0) {
+    return DataAdd(url, params)
+  } else {
+    return DataPUT(url, params)
+  }
+}

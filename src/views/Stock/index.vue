@@ -7,7 +7,7 @@
       <!-- <el-table-column label="操作">
         <template>
         </template>
-      </el-table-column> -->
+      </el-table-column>-->
     </el-table>
     <el-pagination
       @size-change="sizeChange"
@@ -47,6 +47,7 @@ export default {
       totalNum: 0,
       columns,
       title: '库存查询',
+      tabvalue: 'KCCX',
       tabItems: [{ title: '库存查询', value: 'KCCX', count: 0 }]
     }
   },
@@ -66,6 +67,7 @@ export default {
       this.GetData()
     },
     GetData () {
+      var _this = this
       const loading = this.$loading({
         lock: true,
         text: '数据加载中',
@@ -77,43 +79,45 @@ export default {
         SkipCount: (this.currentPage - 1) * this.pageSize,
         MaxResultCount: this.pageSize
       }
-      GetAll('VM_Inventory/GetAll', obj).then(
-        res => {
-          // console.log(res); // 返回对象
-          // console.log(res.data.result.items); // 集合
-          // console.log(res.data.result.totalCount); // 总长度
+      GetAll('VM_Inventory/GetAll', obj)
+        .then(
+          res => {
+            // console.log(res); // 返回对象
+            // console.log(res.data.result.items); // 集合
+            // console.log(res.data.result.totalCount); // 总长度
 
-          var result = res.data.result // 集合
-          this.totalNum = result.totalCount // 总长度
-          var TabaleObj = {} // 对象
-          var TableList = [] // 集合
+            var result = res.data.result // 集合
+            this.totalNum = result.totalCount // 总长度
+            var TabaleObj = {} // 对象
+            var TableList = [] // 集合
 
-          // 遍历返回集合 选取需要的
-          result.items.forEach(item => {
-            TabaleObj.仓库 = item.仓库
-            TabaleObj.仓位 = item.仓位
-            TabaleObj.物料编码 = item.物料编码
-            TabaleObj.物料名称 = item.物料名称
-            TabaleObj.规格型号 = item.规格型号
-            TabaleObj.单位 = item.单位
-            TabaleObj.辅助属性 = item.辅助属性
-            TabaleObj.批号 = item.批号
-            TabaleObj.库存数量 = item.库存数量
-            TableList.push(TabaleObj)
-          })
-          this.tabledata = []
-          // 重新渲染列表
-          this.tabledata = TableList
+            // 遍历返回集合 选取需要的
+            result.items.forEach(item => {
+              TabaleObj.仓库 = item.仓库
+              TabaleObj.仓位 = item.仓位
+              TabaleObj.物料编码 = item.物料编码
+              TabaleObj.物料名称 = item.物料名称
+              TabaleObj.规格型号 = item.规格型号
+              TabaleObj.单位 = item.单位
+              TabaleObj.辅助属性 = item.辅助属性
+              TabaleObj.批号 = item.批号
+              TabaleObj.库存数量 = item.库存数量
+              TableList.push(TabaleObj)
+            })
+            this.tabledata = []
+            // 重新渲染列表
+            this.tabledata = TableList
+            //
+            this.tabItems.forEach(item => {
+              item.count =
+                item.value === _this.tabvalue ? result.totalCount : item.count
+            })
+            loading.close()
+          }
+        )
+        .catch(function () {
           loading.close()
-        },
-        response => {
-          loading.close()
-          this.$notify.error({
-            title: '系统提示',
-            message: '请求失败，请稍后再试！'
-          })
-        }
-      )
+        })
     }
   },
   computed: {

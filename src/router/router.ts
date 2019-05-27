@@ -3,8 +3,8 @@ import Router from 'vue-router'
 
 Vue.use(Router)
 
-export default new Router({
-  routes:[
+ const router = new Router({
+  routes: [
     {
       path: '/',
       name: 'home',
@@ -58,6 +58,18 @@ export default new Router({
       name: 'BarCode',
       component: () => import('../views/BarCode/index.vue')
     }
-  
+
   ]
 })
+
+// router.beforeEach((to,from,next)=>{
+//   // console.log(to)
+//   var token=sessionStorage.getItem('token')
+//   if(token){
+//     // next()
+//   }else{
+//     // next({ path: '/login' });
+//   }
+// })
+
+export default router;

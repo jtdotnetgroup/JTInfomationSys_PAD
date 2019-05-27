@@ -26,6 +26,7 @@ const account = {
           var data = res.data
           if (!data.error) {
             commit('UPDATE_ACCESSTOKEN', data.result.accessToken)
+            sessionStorage.setItem('token', data.result.accessToken)
             commit('UPDATE_USERNAME', payload.username)
             resolve()
           } else {

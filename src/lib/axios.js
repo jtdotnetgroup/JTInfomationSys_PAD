@@ -1,10 +1,10 @@
 import Vue from 'vue'
 import axios from 'axios'
 import Vuex from 'vuex'
-import { Message } from 'element-ui'
-import { store } from '@/store'
+import { message } from 'element-ui'
+import { store } from '../store.js'
 // Vue.use(axios)
-Vue.use(Vuex)
+// Vue.use(Vuex)
 Vue.prototype.$ajax = axios
 //
 var url = window.location.host
@@ -21,24 +21,52 @@ if (url.indexOf('http://222.72.134.71') >= 0) {
 const http = axios.create({
   baseURL: baseURL + '/api/services/app/'
 })
-
-axios.interceptors.request.use(function (config) {
-  // console.log('interceptors' + sessionStorage.token)
-  if (sessionStorage.token) {
-    console.log('interceptors' + sessionStorage.token)
-    config.headers.common['Authorization'] = 'Bearer ' + sessionStorage.token
+//
+const err = (error) => {
+  if (error.response) {
+    const data = error.response.data
+    const token = Vue.ls.get(ACCESS_TOKEN)
+    if (error.response.status === 403) {
+      message.error('抱歉，你没有权限操作！')
+    }
+    if (error.response.status === 401 && !(data.result && data.result.isLogin)) {
+      message.error('未授权,请登录')
+      if (token) {
+        store.dispatch('Logout').then(() => {
+          setTimeout(() => {
+            window.location.reload()
+          }, 1500)
+        })
+      }
+    }
+    if (error.response.status === 500) {
+      message.error('抱歉，服务器处理请求异常')
+    }
+    if (error.response.status === 400) {
+      message.error(data.error.details)
+    }
+  }
+  return Promise.reject(error)
+}
+//
+http.interceptors.request.use(function (config) {
+  // console.log('dsaasd')
+  var token = sessionStorage.getItem('token')
+  if (token) {
+    // console.log('interceptors' + sessionStorage.token)
+    config.headers.common['Authorization'] = 'Bearer ' + token
     config.headers.common['.AspNetCore.Culture'] = 'zh-Hans'
     // config.headers['Access-Token'] = sessionStorage.token
+  } else {
+    // console.log('请重新登录！')
   }
   // console.log('interceptors:' + this.$store.state.token)
   // console.log(account.state.accessToken)
   // config.headers['Authorization'] = account.state.accessToken
   // 在发送请求之前做些什么
   return config
-}, function (error) {
-  // 对请求错误做些什么
-  return Promise.reject(error)
-})
+}, err)
+
 // // 请求拦截
 // axios.interceptors.request.use(
 //   config => {

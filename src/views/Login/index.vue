@@ -50,68 +50,78 @@ export default {
       var _this = this
       this.$refs['form'].validate(valid => {
         if (valid) {
+          //           const loading = _this.$loading({
+          //             lock: true,
+          //             text: '登录中',
+          //             spinner: 'el-icon-loading',
+          //             background: 'rgba(0, 0, 0, 0.7)'
+          //           })
+          //           axios
+          //             .post('http://localhost:21021/api/TokenAuth/Authenticate', {
+          //               usernameOrEmailAddress: this.form.username,
+          //               password: this.form.password
+          //             })
+          //             .then(res => {
+          //               console.log(res)
+          //               if (res.data.success) {
+          //                 loading.close()
+          //                 var result = res.data.result
+
+          //                 this.$store.commit('UPDATE_ACCESSTOKEN',result.accessToken)
+
+          //               sessionStorage.token=result.accessToken
+          // console.log('1'+  sessionStorage.token)
+          // //                 this.$store.state.commit('UPDATE_ACCESSTOKEN',result.accessToken)
+          // // console.log('2')
+          //                 var obj = {
+          //                   accessToken: result.accessToken,
+          //                   encryptedAccessToken: result.encryptedAccessToken,
+          //                   expireInSeconds: result.expireInSeconds,
+          //                   userId: result.userId
+          //                 }
+          //                 // console.log(obj)
+          //                 this.$message({
+          //                   message: '登录成功！',
+          //                   type: 'success',
+          //                   duration: 500
+          //                 })
+          //                 setInterval(_this.$router.push('/'), 3000)
+          //               } else {
+          //                 _this.$message.error('账号与密码不匹配')
+          //               }
+          //               setTimeout(() => {
+          //                 loading.close()
+          //               }, 2000)
+          //             })
+          //             .catch(err => {
+          //               loading.close()
+
+          //               _this.$message.error('账号与密码不匹配')
+          //             })
           const loading = _this.$loading({
             lock: true,
             text: '登录中',
             spinner: 'el-icon-loading',
             background: 'rgba(0, 0, 0, 0.7)'
           })
-          axios
-            .post('http://localhost:21021/api/TokenAuth/Authenticate', {
-              usernameOrEmailAddress: this.form.username,
+          this.$store
+            .dispatch('account/Login', {
+              username: this.form.username,
               password: this.form.password
             })
-            .then(res => {
-              if (res.data.success) {
+            .then(
+              res => {
                 loading.close()
-                var result = res.data.result
-                this.$store.state.token = result.accessToken
- 
-              sessionStorage.token=result.accessToken
-// console.log('1'+ result.accessToken)
-//                 this.$store.state.commit('UPDATE_ACCESSTOKEN',result.accessToken) 
-// console.log('2')
-                var obj = {
-                  accessToken: result.accessToken,
-                  encryptedAccessToken: result.encryptedAccessToken,
-                  expireInSeconds: result.expireInSeconds,
-                  userId: result.userId
-                }
-                // console.log(obj)
-                this.$message({
-                  message: '登录成功！',
-                  type: 'success',
-                  duration: 500
-                })
-                setInterval(_this.$router.push('/'), 3000)
-              } else {
-                _this.$message.error('账号与密码不匹配')
+                console.log(res)
+                // 登录成功
+                this.$router.push('/')
+              },
+              () => {
+                // 登录失败
+                loading.close()
+                console.log('登录失败')
               }
-              setTimeout(() => {
-                loading.close()
-              }, 2000)
-            })
-            .catch(err => {
-              loading.close()
-
-              _this.$message.error('账号与密码不匹配')
-            })
-          // this.$store
-          //   .dispatch('account/Login', {
-          //     username: this.form.username,
-          //     password: this.form.password
-          //   })
-          //   .then(
-          //     res => {
-          //       console.log(res)
-          //       // 登录成功
-          //       this.$router.push('/')
-          //     },
-          //     () => {
-          //       // 登录失败
-          //       console.log('登录失败')
-          //     }
-          //   )
+            )
         } else {
         }
       })

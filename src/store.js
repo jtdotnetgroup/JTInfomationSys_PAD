@@ -14,7 +14,6 @@ const store = new Vuex.Store({
 
   },
   state: {
-    token: ''
   },
   mutations: {
 
@@ -24,4 +23,5 @@ const store = new Vuex.Store({
   }
 })
 
+// prototype
 export default store

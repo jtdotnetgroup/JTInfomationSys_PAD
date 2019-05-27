@@ -7,7 +7,6 @@ const columns = {
     { id: 'planqty', label: '计划开工/完工', width: 150, sort: false },
     { id: '派工', label: '派工', width: 60, sort: false }
   ],
-  receiveObj: { billno: '', device: '', product: '', startendtime: '', planqty: '', planqty1: '' },
   report: [
     { id: '派工单号', label: '派工单号', width: 130, sort: false },
     { id: 'device', label: '设备', width: 60, sort: false },
