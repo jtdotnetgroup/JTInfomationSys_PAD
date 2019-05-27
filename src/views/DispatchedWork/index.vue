@@ -118,27 +118,28 @@ export default {
     // 点击操作
     handle: function (type, index, row) {
       var _this = this
+      var obj = {}
       // console.log(index, row);
       switch (type) {
         // 汇报
         case 0:
-          var obj = { FFinishAuxQty: row.汇报, FID: row.FID * 1 }
+          obj = { FFinishAuxQty: row.汇报, FID: row.FID * 1 }
           _this.$refs.Report.show(obj)
           break
         // 领料
         case 1:
-          var obj1 = { id: 0 }
-          _this.$refs.Picking.show(obj1)
+          obj = { id: 0 }
+          _this.$refs.Picking.show(obj)
           break
         // 开工
         case 2:
-          var obj2 = { FID: row.FID, FSrcID: row.FSrcID }
-          _this.$refs.OpenWork.show(obj2)
+          obj = { FID: row.FID, FSrcID: row.FSrcID }
+          _this.$refs.OpenWork.show(obj)
           break
         // 异常
         case 3:
-          var obj3 = { FID: row.FID, FSrcID: row.FSrcID }
-          _this.$refs.AbnormalReport.show(obj3)
+          obj = { FID: row.FID, FSrcID: row.FSrcID }
+          _this.$refs.AbnormalReport.show(obj)
           break
         // 默认提示功能尚未开发
         default:
