@@ -10,8 +10,16 @@
     <el-table :data="tabledata" border stripe>
       <el-table-column v-for="col in columnHeader" :prop="col.id" :key="col.id" :label="col.label"></el-table-column>
       <el-table-column label="操作">
-        <template>
-          <el-button type="primary" @click="scope">检验</el-button>
+        <template slot-scope="scope">
+          <el-button
+            plain
+            round
+            v-for="item in funmenu"
+            v-show="item.show"
+            :key="item.num"
+            @click="handle(item.num,scope.$index, scope.row)"
+            :type="item.type"
+          >{{item.title}}</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -48,7 +56,16 @@ export default {
       pageSize: 20,
       totalNum: 0,
       tabvalue: 'receive',
-      tableColumns: columns
+      tableColumns: columns,
+      funmenu: [
+        {
+          type: '',
+          num: 0,
+          title: '检验',
+          show: true,
+          ShowWhe: ['receive']
+        }
+      ]
     }
   },
   components: {
@@ -60,10 +77,15 @@ export default {
     },
     sizeChange (value) {},
     currentChange (value) {},
-    scope () {
-      this.$router.push({
+    handle: function (type, index, row) {
+      var _this = this
+      var obj = { FID: row.fid, Step: row.工序, 汇报数: row.汇报, FOperID: row.FOperID, FBillNo: row.FBillNo, FItemID: row.FItemID }
+      //  console.log(obj)
+      _this.$router.push({
         // 核心语句
-        path: '/IPQC/Report' // 跳转的路径
+        name: 'IPQCReport',
+        // path: "/IPQC/Report", // 跳转的路径
+        query: obj
       })
     },
     GetData () {
@@ -83,44 +105,46 @@ export default {
         background: 'rgba(0, 0, 0, 0.7)'
       })
       GetAll('VW_MODispBillList/GetAll', obj)
-        .then(
-          res => {
-            // console.log(res) // 返回对象
-            // console.log(res.data.result.items) // 集合
-            // console.log(res.data.result.totalCount) // 总长度
+        .then(res => {
+          // console.log(res) // 返回对象
+          // console.log(res.data.result.items) // 集合
+          // console.log(res.data.result.totalCount) // 总长度
 
-            var result = res.data.result // 集合
-            this.totalNum = result.totalCount // 总长度
+          var result = res.data.result // 集合
+          this.totalNum = result.totalCount // 总长度
 
-            var TableList = [] // 集合
+          var TableList = [] // 集合
 
-            // 遍历返回集合 选取需要的
-            result.items.forEach(item => {
-              var TabaleObj = {} // 对象
-              TabaleObj.fTranType = item.fTranType
-              TabaleObj.派工单号 = item.派工单号
-              TabaleObj.设备 = item.设备
-              TabaleObj.产品名称 = item.产品名称
-              TabaleObj.产品名称 = item.产品名称
-              TabaleObj.规格型号 = item.规格型号
-              TabaleObj.工序 = item.工序
-              TabaleObj.生产日期 = item.生产日期
-              TabaleObj.派工 = item.派工数量
-              TabaleObj.汇报 = item.汇报数量
-              TabaleObj.合格数量 = item.合格数量
-              TabaleObj.不合格数量 = item.不合格数量
-              TableList.push(TabaleObj)
-            })
-            // 重新渲染列表
-            this.tabledata = TableList
-            //
-            this.tabItems.forEach(item => {
-              item.count =
-                item.value === this.tabvalue ? result.totalCount : item.count
-            })
-            loading.close()
-          }
-        )
+          // 遍历返回集合 选取需要的
+          result.items.forEach(item => {
+            var TabaleObj = {} // 对象
+            TabaleObj.fTranType = item.fTranType
+            TabaleObj.派工单号 = item.派工单号
+            TabaleObj.设备 = item.设备
+            TabaleObj.产品名称 = item.产品名称
+            TabaleObj.产品名称 = item.产品名称
+            TabaleObj.规格型号 = item.规格型号
+            TabaleObj.工序 = item.工序
+            TabaleObj.生产日期 = item.生产日期
+            TabaleObj.派工 = item.派工数量
+            TabaleObj.汇报 = item.汇报数量
+            TabaleObj.合格数量 = item.合格数量
+            TabaleObj.不合格数量 = item.不合格数量
+            TabaleObj.fid = item.fid
+            TabaleObj.FOperID = item.fOperID
+            TabaleObj.FBillNo = item.派工单号
+            TabaleObj.FItemID = item.fItemID
+            TableList.push(TabaleObj)
+          })
+          // 重新渲染列表
+          this.tabledata = TableList
+          //
+          this.tabItems.forEach(item => {
+            item.count =
+              item.value === this.tabvalue ? result.totalCount : item.count
+          })
+          loading.close()
+        })
         .catch(function () {
           loading.close()
         })

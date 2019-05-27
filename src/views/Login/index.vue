@@ -112,7 +112,7 @@ export default {
             .then(
               res => {
                 loading.close()
-                console.log(res)
+                // console.log(res)
                 // 登录成功
                 this.$router.push('/')
               },

@@ -3,7 +3,7 @@ import Router from 'vue-router'
 
 Vue.use(Router)
 
- const router = new Router({
+const router = new Router({
   routes: [
     {
       path: '/',
@@ -62,13 +62,16 @@ Vue.use(Router)
   ]
 })
 
-// router.beforeEach((to,from,next)=>{
+// router.beforeEach((to, from, next) => {
 //   // console.log(to)
-//   var token=sessionStorage.getItem('token')
-//   if(token){
-//     // next()
-//   }else{
-//     // next({ path: '/login' });
+//   var token = sessionStorage.getItem('token')
+//   if (token) {  // 通过vuex state获取当前的token是否存在
+//     next();
+//   }
+//   else {
+//     next({
+//       name: 'login'
+//     })
 //   }
 // })
 

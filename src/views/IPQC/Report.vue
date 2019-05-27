@@ -1,20 +1,10 @@
 <template>
   <div class="fullscreen">
+    <!-- 栏目 -->
     <tableHeader class="header" :title="title" :items="tabItems" @tabChange="handelTabChange"/>
+    <!-- 输入框 -->
     <el-row style="background-color: white;
     padding: 20px 0px;">
-      <el-col :span="2">
-        <div class="grid-content">
-          <div class="demo-input-suffix" style="line-height:40px;font-size: 20px;">流转卡号：</div>
-        </div>
-      </el-col>
-      <el-col :span="4">
-        <div class="grid-content">
-          <div class="demo-input-suffix">
-            <el-input v-model="CodeNum" placeholder="请输入流转卡号"></el-input>
-          </div>
-        </div>
-      </el-col>
       <el-col :span="2">
         <div class="grid-content">
           <div class="demo-input-suffix" style="line-height:40px;font-size: 20px;">工序：</div>
@@ -23,7 +13,19 @@
       <el-col :span="4">
         <div class="grid-content">
           <div class="demo-input-suffix">
-            <el-input v-model="Step" placeholder="请输入工序"></el-input>
+            <el-input v-model="from.Step" disabled="disabled" placeholder="请输入工序"></el-input>
+          </div>
+        </div>
+      </el-col>
+      <el-col :span="2">
+        <div class="grid-content">
+          <div class="demo-input-suffix" style="line-height:40px;font-size: 20px;">批号：</div>
+        </div>
+      </el-col>
+      <el-col :span="4">
+        <div class="grid-content">
+          <div class="demo-input-suffix">
+            <el-input v-model="from.FBillNo"  disabled="disabled" placeholder="请输入批号"></el-input>
           </div>
         </div>
       </el-col>
@@ -32,82 +34,37 @@
       </el-col>
       <el-col :span="10">
         <div class="grid-content" style="text-align: right;padding-right: 15px;">
-          <el-button plain>取消</el-button>
-          <el-button type="success" plain>提交</el-button>
+          <el-button @click="Cancel" plain>取消</el-button>
+          <el-button @click="OnSubmit" type="success" plain>提交</el-button>
         </div>
       </el-col>
     </el-row>
-
-    <el-row :gutter="0" class="bbtbt">
-      <el-col :span="8" class="btbt">
+    <!-- 所有项目列表 -->
+    <el-row :gutter="0" class="bbtbt" v-loading="loading">
+      <el-col :span="8" class="btbt" v-for="(tmp,index2) in AllCol" :key="index2">
         <div class="grid-content">
           <el-row :gutter="0" class="text-bule">
             <el-col :span="12">
-              <div class="grid-content btt btr">不良项目</div>
+              <div class="grid-content btt btr">{{tmp.title1}}</div>
             </el-col>
             <el-col :span="12">
-              <div class="grid-content btt">次数</div>
+              <div class="grid-content btt">{{tmp.title2}}</div>
             </el-col>
           </el-row>
         </div>
-        <div class="grid-content" v-for="(item, index) in BadItem" :key="index">
+        <div class="grid-content" v-for="(item, index) in tmp.Col" :key="index">
           <el-row :gutter="0" :class="(index%2 == 0)? 'text-gray':'text-white'">
             <el-col :span="12">
-              <div :class="(index%2 == 0)? 'grid-content bt btr':'grid-content bt btrw'" :style="'color:'+item.typecolor">{{item.type}}</div>
+              <div
+                :class="(index%2 == 0)? 'grid-content bt btr':'grid-content bt btrw'"
+                :style="'color:'+item.typecolor"
+              >{{item.type}}</div>
             </el-col>
             <el-col :span="12">
               <div class="grid-content bt">
-                <i class="el-icon-minus icon"></i>
-                <span :style="'color:'+item.numcolor">{{item.num}}</span>
-                <i class="el-icon-plus icon"></i>
-              </div>
-            </el-col>
-          </el-row>
-        </div>
-      </el-col>
-      <el-col :span="8" class="btbt">
-        <div class="grid-content">
-          <el-row :gutter="0" class="text-bule">
-            <el-col :span="12">
-              <div class="grid-content btt btr">不良判断</div>
-            </el-col>
-            <el-col :span="12">
-              <div class="grid-content btt">数量</div>
-            </el-col>
-          </el-row>
-        </div>
-        <div class="grid-content" v-for="(item, index) in Badjudgement" :key="index">
-          <el-row :gutter="0" :class="(index%2 == 0)? 'text-gray':'text-white'">
-            <el-col :span="12">
-              <div :class="(index%2 == 0)? 'grid-content bt btr':'grid-content bt btrw'" :style="'color:'+item.typecolor">{{item.type}}</div>
-            </el-col>
-            <el-col :span="12">
-              <div class="grid-content bt">
-                <span :style="'color:'+item.numcolor">{{item.num}}</span>
-              </div>
-            </el-col>
-          </el-row>
-        </div>
-      </el-col>
-      <el-col :span="8" class="btbt">
-        <div class="grid-content">
-          <el-row :gutter="0" class="text-bule">
-            <el-col :span="12">
-              <div class="grid-content btt btr">项目</div>
-            </el-col>
-            <el-col :span="12">
-              <div class="grid-content btt">数量</div>
-            </el-col>
-          </el-row>
-        </div>
-        <div class="grid-content" v-for="(item, index) in BadProject" :key="index">
-          <el-row :gutter="0" :class="(index%2 == 0)? 'text-gray':'text-white'">
-            <el-col :span="12">
-              <div :class="(index%2 == 0)? 'grid-content bt btr':'grid-content bt btrw'"  :style="'color:'+item.typecolor">{{item.type}}</div>
-            </el-col>
-            <el-col :span="12">
-              <div class="grid-content bt">
-                <span :style="'color:'+item.numcolor">{{item.num}}</span>
+                <i class="el-icon-minus icon" v-show="item.IsAddDel" @click="item.num--"></i>
+                <span :style="'color:'+item.numcolor" :id="item.key">{{item.num}}</span>
+                <i class="el-icon-plus icon" v-show="item.IsAddDel" @click="item.num++"></i>
               </div>
             </el-col>
           </el-row>
@@ -117,36 +74,141 @@
   </div>
 </template>
 <script>
+// 数据处理
+import { GetMx, DataAddOrPUT } from '@/api/mission'
+//
 import columns from './TestingtableColumns.js'
 // 派工单页面
 export default {
   name: 'IPQC',
   data () {
     return {
+      loading: false,
       title: '质检汇报',
-      tabItems: [
-        { title: '质检汇报', value: 'ZJHB', count: 0 }
-      ],
+      tabItems: [{ title: '质检汇报', value: 'ZJHB', count: 0 }],
       tabvalue: 'ZJHB',
-      CodeNum: '',
-      Step: '',
-      BadItem: [
-        { type: '毛刺', num: 5, typecolor: 'back', numcolor: 'back' },
-        { type: '斜面', num: 5, typecolor: 'back', numcolor: 'back' },
-        { type: '裂纹', num: 4, typecolor: 'back', numcolor: 'back' },
-        { type: '………', num: 1, typecolor: 'back', numcolor: 'red' }
-      ],
-      Badjudgement: [
-        { type: '工回', num: 0, typecolor: 'back', numcolor: 'back' },
-        { type: '料回', num: 0, typecolor: 'back', numcolor: 'back' },
-        { type: '工废', num: 1, typecolor: 'red', numcolor: 'red' },
-        { type: '料废', num: 0, typecolor: 'red', numcolor: 'red' }
-      ],
-      BadProject: [
-        { type: '汇报数', num: 5, typecolor: 'back', numcolor: 'back' },
-        { type: '检验数', num: 5, typecolor: 'back', numcolor: 'back' },
-        { type: '合格数', num: 4, typecolor: 'back', numcolor: 'back' },
-        { type: '不合格', num: 1, typecolor: 'red', numcolor: 'red' }
+      from: {
+        FID: 0,
+        FItemID: 0,
+        Step: '',
+        FBillNo: '',
+        汇报数: 0,
+        FOperID: 0
+      },
+      AllCol: [
+        {
+          ColKey: 'col1',
+          title1: '项目',
+          title2: '数量',
+          Col: [
+            {
+              key: 'FAuxQty',
+              type: '汇报数',
+              num: 0,
+              typecolor: 'back',
+              numcolor: 'back',
+              IsAddDel: true
+            },
+            {
+              key: 'FCheckAuxQty',
+              type: '检验数',
+              num: 0,
+              typecolor: 'back',
+              numcolor: 'back',
+              IsAddDel: true
+            },
+            {
+              key: 'FPassAuxQty',
+              type: '合格数',
+              num: 0,
+              typecolor: 'back',
+              numcolor: 'back',
+              IsAddDel: true
+            },
+            {
+              key: 'FFailAuxQty',
+              type: '不合格',
+              num: 0,
+              typecolor: 'red',
+              numcolor: 'red',
+              IsAddDel: true
+            }
+          ]
+        },
+        {
+          ColKey: 'col2',
+          title1: '不良判断',
+          title2: '数量',
+          Col: [
+            {
+              key: 'FFailAuxQtyP',
+              type: '工废',
+              num: 0,
+              typecolor: 'back',
+              numcolor: 'back',
+              IsAddDel: true
+            },
+            {
+              key: 'FFailAuxQtyM',
+              type: '料废',
+              num: 0,
+              typecolor: 'back',
+              numcolor: 'back',
+              IsAddDel: true
+            },
+            {
+              key: 'FPassAuxQtyP',
+              type: '工回',
+              num: 0,
+              typecolor: 'red',
+              numcolor: 'red',
+              IsAddDel: true
+            },
+            {
+              key: 'FPassAuxQtyM',
+              type: '料回',
+              num: 0,
+              typecolor: 'red',
+              numcolor: 'red',
+              IsAddDel: true
+            }
+          ]
+        },
+        {
+          ColKey: 'col3',
+          title1: '不良项目',
+          title2: '次数',
+          Col: [
+            {
+              type: '毛刺',
+              num: 0,
+              typecolor: 'back',
+              numcolor: 'back',
+              IsAddDel: true
+            },
+            {
+              type: '斜面',
+              num: 0,
+              typecolor: 'back',
+              numcolor: 'back',
+              IsAddDel: true
+            },
+            {
+              type: '裂纹',
+              num: 0,
+              typecolor: 'back',
+              numcolor: 'back',
+              IsAddDel: true
+            },
+            {
+              type: '………',
+              num: 0,
+              typecolor: 'back',
+              numcolor: 'red',
+              IsAddDel: true
+            }
+          ]
+        }
       ]
     }
   },
@@ -154,13 +216,174 @@ export default {
     tableHeader: () => import('@/components/tablePageHeader.vue')
   },
   methods: {
+    //
+    Cancel () {
+      this.$router.go(-1) // 返回上一层
+    },
+    // 提交
+    OnSubmit () {
+      var _this = this
+      if (_this.from.FBillNo.length === 0) {
+        _this.$message({
+          showClose: true,
+          message: '批号不能为空！',
+          type: 'warning'
+        })
+      }
+      // _this.loading = true;
+      var obj = {
+        icmoInspectBill: {
+          fid: _this.from.FID,
+          fOperID: _this.from.FOperID,
+          fBillNo: _this.from.FBillNo,
+          fAuxQty: _this.AllCol[0].Col[0].num,
+          fCheckAuxQty: _this.AllCol[0].Col[1].num,
+          fPassAuxQty: _this.AllCol[0].Col[2].num,
+          fFailAuxQty: _this.AllCol[0].Col[3].num,
+          fFailAuxQtyP: _this.AllCol[1].Col[0].num,
+          fFailAuxQtyM: _this.AllCol[1].Col[1].num,
+          fPassAuxQtyP: _this.AllCol[1].Col[2].num,
+          fPassAuxQtyM: _this.AllCol[1].Col[3].num,
+          fNote: ''
+        },
+        icQualityRptsList: []
+      }
+      // console.log(obj)
+      // return;
+      DataAddOrPUT('ICMOInspectBill/ICMODispBillSave', obj)
+        .then(res => {
+          _this.$message({
+            message: '提交成功',
+            type: 'success'
+          })
+          if (res.data.success) {
+            _this.Cancel()
+          }
+          _this.loading = false
+        })
+        .catch(function () {
+          _this.loading = false
+        })
+    },
+    Detailed () {
+      var _this = this
+      _this.loading = true
+      var obj = {
+        fid: this.from.FID,
+        fItemID: this.from.FItemID,
+        fBillNo: this.from.FBillNo,
+        fOperID: this.from.FOperID
+      }
+      GetMx('ICMOInspectBill/ICMOInspectBillDetailed', obj)
+        .then(res => {
+          // console.log(res);
+          if (res.data.success) {
+            var result = res.data.result
+            var Bill = result.icmoInspectBill
+            var icQualityRptsList = result.icQualityRptsList
+            var obj = {
+              ColKey: 'col1',
+              title1: '项目',
+              title2: '数量',
+              Col: [
+                {
+                  key: 'FAuxQty',
+                  type: '汇报数',
+                  num: Bill.fAuxQty,
+                  typecolor: 'back',
+                  numcolor: 'back',
+                  IsAddDel: true
+                },
+                {
+                  key: 'FCheckAuxQty',
+                  type: '检验数',
+                  num: Bill.fCheckAuxQty,
+                  typecolor: 'back',
+                  numcolor: 'back',
+                  IsAddDel: true
+                },
+                {
+                  key: 'FPassAuxQty',
+                  type: '合格数',
+                  num: Bill.fPassAuxQty,
+                  typecolor: 'back',
+                  numcolor: 'back',
+                  IsAddDel: true
+                },
+                {
+                  key: 'FFailAuxQty',
+                  type: '不合格',
+                  num: Bill.fFailAuxQty,
+                  typecolor: 'red',
+                  numcolor: 'red',
+                  IsAddDel: true
+                }
+              ]
+            }
+            //
+            var obj1 = {
+              ColKey: 'col2',
+              title1: '不良判断',
+              title2: '数量',
+              Col: [
+                {
+                  key: 'FFailAuxQtyP',
+                  type: '工废',
+                  num: Bill.fFailAuxQtyP,
+                  typecolor: 'back',
+                  numcolor: 'back',
+                  IsAddDel: true
+                },
+                {
+                  key: 'FFailAuxQtyM',
+                  type: '料废',
+                  num: Bill.fFailAuxQtyM,
+                  typecolor: 'back',
+                  numcolor: 'back',
+                  IsAddDel: true
+                },
+                {
+                  key: 'FPassAuxQtyP',
+                  type: '工回',
+                  num: Bill.fPassAuxQtyP,
+                  typecolor: 'red',
+                  numcolor: 'red',
+                  IsAddDel: true
+                },
+                {
+                  key: 'FPassAuxQtyM',
+                  type: '料回',
+                  num: Bill.fPassAuxQtyM,
+                  typecolor: 'red',
+                  numcolor: 'red',
+                  IsAddDel: true
+                }
+              ]
+            }
+            //
+            _this.AllCol = [obj, obj1]
+            // _this.AllCol.push(obj);
+          }
+          _this.loading = false
+        })
+        .catch(function () {
+          _this.loading = false
+        })
+    },
+    //
     handelTabChange (value) {},
     sizeChange (value) {},
-    currentChange (value) {},
-    scopes () {
-      console.log('sss')
-      this.$router.push({ path: '../views/IPQC/Testing.vue' })
-    }
+    currentChange (value) {}
+  },
+  // 页面渲染前 执行
+  created: function () {
+    this.from.FID = this.$route.query.FID
+    this.from.FItemID = this.$route.query.FItemID
+    this.from.Step = this.$route.query.Step
+    this.from.汇报数 = this.$route.query.汇报数
+    this.from.FOperID = this.$route.query.FOperID
+    this.from.FBillNo = this.$route.query.FBillNo
+    this.Detailed()
   },
   computed: {
     columnHeader () {

@@ -19,17 +19,21 @@ if (url.indexOf('http://222.72.134.71') >= 0) {
 }
 // console.log(baseURL)
 const http = axios.create({
-  baseURL: baseURL + '/api/services/app/'
+  baseURL: baseURL + '/api/services/app/',
+  timeout: 20000
 })
 //
 const err = (error) => {
+  console.log(error)
   if (error.response) {
     const data = error.response.data
     const token = Vue.ls.get(ACCESS_TOKEN)
     if (error.response.status === 403) {
+      console.log('抱歉，你没有权限操作！')
       message.error('抱歉，你没有权限操作！')
     }
     if (error.response.status === 401 && !(data.result && data.result.isLogin)) {
+      console.log('未授权,请登录')
       message.error('未授权,请登录')
       if (token) {
         store.dispatch('Logout').then(() => {
@@ -40,9 +44,11 @@ const err = (error) => {
       }
     }
     if (error.response.status === 500) {
+      console.log('抱歉，服务器处理请求异常')
       message.error('抱歉，服务器处理请求异常')
     }
     if (error.response.status === 400) {
+      console.log(data.error.details)
       message.error(data.error.details)
     }
   }
@@ -53,6 +59,7 @@ http.interceptors.request.use(function (config) {
   // console.log('dsaasd')
   var token = sessionStorage.getItem('token')
   if (token) {
+    sessionStorage.setItem('token', token)
     // console.log('interceptors' + sessionStorage.token)
     config.headers.common['Authorization'] = 'Bearer ' + token
     config.headers.common['.AspNetCore.Culture'] = 'zh-Hans'

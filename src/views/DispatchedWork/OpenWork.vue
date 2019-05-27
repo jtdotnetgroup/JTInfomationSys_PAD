@@ -62,6 +62,7 @@ export default {
       DataAdd('ICMaterialPicking/CreateOrUpdate', obj)
         .then(res => {
           if (res.status === 200) {
+
           }
           this.loading = false
         })
@@ -88,6 +89,7 @@ export default {
       })
     },
     Detailed (obj) {
+      var _this = this
       GetMx('ICMaterialPicking/Get', obj)
         .then(res => {
           // console.log(res); // 返回对象
@@ -100,10 +102,10 @@ export default {
               _this.$refs['from'].resetFields()
             }
           }
-          this.loading = false
+          _this.loading = false
         })
         .catch(function () {
-          this.loading = false
+          _this.loading = false
         })
     }
   }
