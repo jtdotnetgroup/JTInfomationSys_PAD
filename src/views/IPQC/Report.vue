@@ -25,7 +25,7 @@
       <el-col :span="4">
         <div class="grid-content">
           <div class="demo-input-suffix">
-            <el-input v-model="from.FBillNo"  disabled="disabled" placeholder="请输入批号"></el-input>
+            <el-input v-model="from.FBillNo" disabled="disabled" placeholder="请输入批号"></el-input>
           </div>
         </div>
       </el-col>
@@ -75,160 +75,141 @@
 </template>
 <script>
 // 数据处理
-import { GetMx, DataAddOrPUT } from '@/api/mission'
+import { GetMx, DataAddOrPUT, GetAll } from "@/api/mission";
 //
-import columns from './TestingtableColumns.js'
+import columns from "./TestingtableColumns.js";
 // 派工单页面
 export default {
-  name: 'IPQC',
-  data () {
+  name: "IPQC",
+  data() {
     return {
       loading: false,
-      title: '质检汇报',
-      tabItems: [{ title: '质检汇报', value: 'ZJHB', count: 0 }],
-      tabvalue: 'ZJHB',
+      title: "质检汇报",
+      tabItems: [{ title: "质检汇报", value: "ZJHB", count: 0 }],
+      tabvalue: "ZJHB",
       from: {
         FID: 0,
         FItemID: 0,
-        Step: '',
-        FBillNo: '',
+        Step: "",
+        FBillNo: "",
         汇报数: 0,
         FOperID: 0
       },
       AllCol: [
         {
-          ColKey: 'col1',
-          title1: '项目',
-          title2: '数量',
+          ColKey: "col1",
+          title1: "项目",
+          title2: "数量",
           Col: [
             {
-              key: 'FAuxQty',
-              type: '汇报数',
+              key: "FAuxQty",
+              type: "汇报数",
               num: 0,
-              typecolor: 'back',
-              numcolor: 'back',
+              typecolor: "back",
+              numcolor: "back",
               IsAddDel: true
             },
             {
-              key: 'FCheckAuxQty',
-              type: '检验数',
+              key: "FCheckAuxQty",
+              type: "检验数",
               num: 0,
-              typecolor: 'back',
-              numcolor: 'back',
+              typecolor: "back",
+              numcolor: "back",
               IsAddDel: true
             },
             {
-              key: 'FPassAuxQty',
-              type: '合格数',
+              key: "FPassAuxQty",
+              type: "合格数",
               num: 0,
-              typecolor: 'back',
-              numcolor: 'back',
+              typecolor: "back",
+              numcolor: "back",
               IsAddDel: true
             },
             {
-              key: 'FFailAuxQty',
-              type: '不合格',
+              key: "FFailAuxQty",
+              type: "不合格",
               num: 0,
-              typecolor: 'red',
-              numcolor: 'red',
+              typecolor: "red",
+              numcolor: "red",
               IsAddDel: true
             }
           ]
         },
         {
-          ColKey: 'col2',
-          title1: '不良判断',
-          title2: '数量',
+          ColKey: "col2",
+          title1: "不良判断",
+          title2: "数量",
           Col: [
             {
-              key: 'FFailAuxQtyP',
-              type: '工废',
+              key: "FFailAuxQtyP",
+              type: "工废",
               num: 0,
-              typecolor: 'back',
-              numcolor: 'back',
+              typecolor: "back",
+              numcolor: "back",
               IsAddDel: true
             },
             {
-              key: 'FFailAuxQtyM',
-              type: '料废',
+              key: "FFailAuxQtyM",
+              type: "料废",
               num: 0,
-              typecolor: 'back',
-              numcolor: 'back',
+              typecolor: "back",
+              numcolor: "back",
               IsAddDel: true
             },
             {
-              key: 'FPassAuxQtyP',
-              type: '工回',
+              key: "FPassAuxQtyP",
+              type: "工回",
               num: 0,
-              typecolor: 'red',
-              numcolor: 'red',
+              typecolor: "red",
+              numcolor: "red",
               IsAddDel: true
             },
             {
-              key: 'FPassAuxQtyM',
-              type: '料回',
+              key: "FPassAuxQtyM",
+              type: "料回",
               num: 0,
-              typecolor: 'red',
-              numcolor: 'red',
-              IsAddDel: true
-            }
-          ]
-        },
-        {
-          ColKey: 'col3',
-          title1: '不良项目',
-          title2: '次数',
-          Col: [
-            {
-              type: '毛刺',
-              num: 0,
-              typecolor: 'back',
-              numcolor: 'back',
-              IsAddDel: true
-            },
-            {
-              type: '斜面',
-              num: 0,
-              typecolor: 'back',
-              numcolor: 'back',
-              IsAddDel: true
-            },
-            {
-              type: '裂纹',
-              num: 0,
-              typecolor: 'back',
-              numcolor: 'back',
-              IsAddDel: true
-            },
-            {
-              type: '………',
-              num: 0,
-              typecolor: 'back',
-              numcolor: 'red',
+              typecolor: "red",
+              numcolor: "red",
               IsAddDel: true
             }
           ]
         }
-      ]
-    }
+      ],
+      TB_BadItemRelation: []
+    };
   },
   components: {
-    tableHeader: () => import('@/components/tablePageHeader.vue')
+    tableHeader: () => import("@/components/tablePageHeader.vue")
   },
   methods: {
+    GetTB_BadItemRelation() {
+      var _this = this;
+      _this.loading = true;
+      // 0 false ,1 true
+      GetAll("TB_BadItemRelation/GetAll", {})
+        .then(res => {
+          var result = res.data.result;
+          // console.log(result)
+          _this.TB_BadItemRelation = result;
+          _this.AllCol[2].Col.push()
+        })
+        .catch(function() {
+          _this.loading = false;
+        });
+    },
     //
-    Cancel () {
-      this.$router.go(-1) // 返回上一层
+    Cancel() {
+      this.$router.go(-1); // 返回上一层
     },
     // 提交
-    OnSubmit () {
-      var _this = this
+    OnSubmit() {
+      var _this = this;
       if (_this.from.FBillNo.length === 0) {
         _this.$message({
           showClose: true,
-          message: '批号不能为空！',
-          type: 'warning'
-        })
+          message: "批号不能为空！",
+          type: "warning"
+        });
       }
       // _this.loading = true;
       var obj = {
@@ -244,158 +225,205 @@ export default {
           fFailAuxQtyM: _this.AllCol[1].Col[1].num,
           fPassAuxQtyP: _this.AllCol[1].Col[2].num,
           fPassAuxQtyM: _this.AllCol[1].Col[3].num,
-          fNote: ''
+          fNote: ""
         },
         icQualityRptsList: []
-      }
+      };
+      _this.AllCol[2].Col.forEach(item=>{
+        obj.icQualityRptsList.push({FID:0,FItemID:item.key,FAuxQty:item.num,FRemark:'',FNote:''});
+      })
       // console.log(obj)
       // return;
-      DataAddOrPUT('ICMOInspectBill/ICMODispBillSave', obj)
+      DataAddOrPUT("ICMOInspectBill/ICMODispBillSave", obj)
         .then(res => {
           _this.$message({
-            message: '提交成功',
-            type: 'success'
-          })
+            message: "提交成功",
+            type: "success"
+          });
           if (res.data.success) {
-            _this.Cancel()
+            _this.Cancel();
           }
-          _this.loading = false
+          _this.loading = false;
         })
-        .catch(function () {
-          _this.loading = false
-        })
+        .catch(function() {
+          _this.loading = false;
+        });
     },
-    Detailed () {
-      var _this = this
-      _this.loading = true
+    Detailed() {
+      var _this = this;
+      _this.loading = true;
       var obj = {
         fid: this.from.FID,
         fItemID: this.from.FItemID,
         fBillNo: this.from.FBillNo,
         fOperID: this.from.FOperID
-      }
-      GetMx('ICMOInspectBill/ICMOInspectBillDetailed', obj)
+      };
+      GetMx("ICMOInspectBill/ICMOInspectBillDetailed", obj)
         .then(res => {
           // console.log(res);
           if (res.data.success) {
-            var result = res.data.result
-            var Bill = result.icmoInspectBill
-            var icQualityRptsList = result.icQualityRptsList
-            var obj = {
-              ColKey: 'col1',
-              title1: '项目',
-              title2: '数量',
-              Col: [
-                {
-                  key: 'FAuxQty',
-                  type: '汇报数',
-                  num: Bill.fAuxQty,
-                  typecolor: 'back',
-                  numcolor: 'back',
-                  IsAddDel: true
-                },
-                {
-                  key: 'FCheckAuxQty',
-                  type: '检验数',
-                  num: Bill.fCheckAuxQty,
-                  typecolor: 'back',
-                  numcolor: 'back',
-                  IsAddDel: true
-                },
-                {
-                  key: 'FPassAuxQty',
-                  type: '合格数',
-                  num: Bill.fPassAuxQty,
-                  typecolor: 'back',
-                  numcolor: 'back',
-                  IsAddDel: true
-                },
-                {
-                  key: 'FFailAuxQty',
-                  type: '不合格',
-                  num: Bill.fFailAuxQty,
-                  typecolor: 'red',
-                  numcolor: 'red',
-                  IsAddDel: true
-                }
-              ]
-            }
-            //
+            var result = res.data.result;
+            var Bill = result.icmoInspectBill;
+            var icQualityRptsList = result.icQualityRptsList;
             var obj1 = {
-              ColKey: 'col2',
-              title1: '不良判断',
-              title2: '数量',
+              ColKey: "col1",
+              title1: "项目",
+              title2: "数量",
               Col: [
                 {
-                  key: 'FFailAuxQtyP',
-                  type: '工废',
-                  num: Bill.fFailAuxQtyP,
-                  typecolor: 'back',
-                  numcolor: 'back',
+                  key: "FAuxQty",
+                  type: "汇报数",
+                  num: Bill.fAuxQty*1,
+                  typecolor: "back",
+                  numcolor: "back",
                   IsAddDel: true
                 },
                 {
-                  key: 'FFailAuxQtyM',
-                  type: '料废',
-                  num: Bill.fFailAuxQtyM,
-                  typecolor: 'back',
-                  numcolor: 'back',
+                  key: "FCheckAuxQty",
+                  type: "检验数",
+                  num: Bill.fCheckAuxQty*1,
+                  typecolor: "back",
+                  numcolor: "back",
                   IsAddDel: true
                 },
                 {
-                  key: 'FPassAuxQtyP',
-                  type: '工回',
-                  num: Bill.fPassAuxQtyP,
-                  typecolor: 'red',
-                  numcolor: 'red',
+                  key: "FPassAuxQty",
+                  type: "合格数",
+                  num: Bill.fPassAuxQty*1,
+                  typecolor: "back",
+                  numcolor: "back",
                   IsAddDel: true
                 },
                 {
-                  key: 'FPassAuxQtyM',
-                  type: '料回',
-                  num: Bill.fPassAuxQtyM,
-                  typecolor: 'red',
-                  numcolor: 'red',
+                  key: "FFailAuxQty",
+                  type: "不合格",
+                  num: Bill.fFailAuxQty*1,
+                  typecolor: "red",
+                  numcolor: "red",
                   IsAddDel: true
                 }
               ]
-            }
+            } 
             //
-            _this.AllCol = [obj, obj1]
-            // _this.AllCol.push(obj);
+            var obj2 = {
+              ColKey: "col2",
+              title1: "不良判断",
+              title2: "数量",
+              Col: [
+                {
+                  key: "FFailAuxQtyP",
+                  type: "工废",
+                  num: Bill.fFailAuxQtyP*1,
+                  typecolor: "back",
+                  numcolor: "back",
+                  IsAddDel: true
+                },
+                {
+                  key: "FFailAuxQtyM",
+                  type: "料废",
+                  num: Bill.fFailAuxQtyM*1,
+                  typecolor: "back",
+                  numcolor: "back",
+                  IsAddDel: true
+                },
+                {
+                  key: "FPassAuxQtyP",
+                  type: "工回",
+                  num: Bill.fPassAuxQtyP*1,
+                  typecolor: "red",
+                  numcolor: "red",
+                  IsAddDel: true
+                },
+                {
+                  key: "FPassAuxQtyM",
+                  type: "料回",
+                  num: Bill.fPassAuxQtyM*1,
+                  typecolor: "red",
+                  numcolor: "red",
+                  IsAddDel: true
+                }
+              ]
+            };
+            //
+            var obj3 = {
+              ColKey: "col3",
+              title1: "项目",
+              title2: "数量",
+              Col: []
+            };
+            // 后台一起返回
+            // icQualityRptsList.forEach(tmp => {
+            //   if(_this.TB_BadItemRelation tmp.fItemID)
+            //   obj3.Col.push({
+            //     key: tmp.fItemID,
+            //     type: tmp.fName,
+            //     num: tmp.fAuxQty,
+            //     typecolor: "back",
+            //     numcolor: "back",
+            //     IsAddDel: true
+            //   });
+            // });
+             _this.TB_BadItemRelation.forEach(tmp => {
+               var IsShow = true
+               var FItemID = tmp.fid
+               var FName = tmp.fName
+               var FAuxQty = 0
+               IsShow = tmp.fDeleted==1
+               icQualityRptsList.forEach(item=>{
+                 if(item.fItemID==tmp.fid){
+                   IsShow = true
+                   FAuxQty = item.fAuxQty
+                 }
+               })
+               if(IsShow){
+                  obj3.Col.push({
+                    key: FItemID,
+                    type: FName,
+                    num: FAuxQty,
+                    typecolor: "back",
+                    numcolor: "back",
+                    IsAddDel: true
+                  });
+               }
+               
+             });
+            // console.log(_this.TB_BadItemRelation)
+
+            _this.AllCol = [obj1, obj2, obj3];
           }
-          _this.loading = false
+          _this.loading = false;
         })
-        .catch(function () {
-          _this.loading = false
-        })
+        .catch(function() {
+          _this.loading = false;
+        });
     },
     //
-    handelTabChange (value) {},
-    sizeChange (value) {},
-    currentChange (value) {}
+    handelTabChange(value) {},
+    sizeChange(value) {},
+    currentChange(value) {}
   },
   // 页面渲染前 执行
-  created: function () {
-    this.from.FID = this.$route.query.FID
-    this.from.FItemID = this.$route.query.FItemID
-    this.from.Step = this.$route.query.Step
-    this.from.汇报数 = this.$route.query.汇报数
-    this.from.FOperID = this.$route.query.FOperID
-    this.from.FBillNo = this.$route.query.FBillNo
-    this.Detailed()
+  created: function() {
+    this.from.FID = this.$route.query.FID;
+    this.from.FItemID = this.$route.query.FItemID;
+    this.from.Step = this.$route.query.Step;
+    this.from.汇报数 = this.$route.query.汇报数;
+    this.from.FOperID = this.$route.query.FOperID;
+    this.from.FBillNo = this.$route.query.FBillNo;
+    this.GetTB_BadItemRelation();
+    this.Detailed();
   },
   computed: {
-    columnHeader () {
+    columnHeader() {
       switch (this.tabvalue) {
-        case 'ZJHB': {
-          return this.tableColumns.ZJHB
+        case "ZJHB": {
+          return this.tableColumns.ZJHB;
         }
       }
-      return ''
+      return "";
     }
   }
-}
+};
 </script>
 
 <style >
