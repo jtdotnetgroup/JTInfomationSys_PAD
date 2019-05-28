@@ -265,6 +265,7 @@ export default {
             var result = res.data.result;
             var Bill = result.icmoInspectBill;
             var icQualityRptsList = result.icQualityRptsList;
+            if(Bill.FAuxQty*1===0){Bill.FAuxQty=_this.from.汇报数*1}
             var obj1 = {
               ColKey: "col1",
               title1: "项目",
