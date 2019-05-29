@@ -1,27 +1,23 @@
 <template>
-    <el-button @click="handelClick">
-        <el-card :body-style="{ padding: '40px' }">
-            <img :src="icon" />
-            <div id="title">
-                <span>{{title}}</span>
-            </div>x
-            <hr/>
-            <div id="secTitle">
-                <span>
-                    {{secTitle}}：
-                </span>
-                <span class="number" :style="{color:color}">{{count}}</span>
-                </div>
-        </el-card>
-    </el-button>
+  <el-button @click="handelClick">
+    <el-card :body-style="{ padding: '40px' }">
+      <img :src="icon">
+      <div id="title">
+        <span>{{title}}</span>
+      </div>
+      <hr>
+      <div id="secTitle">
+        <span>{{secTitle}}：</span>
+        <span class="number" :style="{color:color}">{{count}}</span>
+      </div>
+    </el-card>
+  </el-button>
 </template>
 
 <script>
 export default {
   data () {
-    return {
-
-    }
+    return {}
   },
   props: {
     path: { type: String, required: true },
@@ -40,17 +36,18 @@ export default {
   },
   computed: {
     color () {
-      return this.isNew ? 'red' : ''
+      return this.count > 0 ? 'red' : ''
     }
   }
 }
 </script>
 
 <style scoped>
-    #title,#secTitle{
-        font-weight: bold
-    }
-    .number{
-        font-size: 1.2rem;
-    }
+#title,
+#secTitle {
+  font-weight: bold;
+}
+.number {
+  font-size: 1.2rem;
+}
 </style>

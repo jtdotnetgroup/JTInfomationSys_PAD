@@ -1,30 +1,27 @@
 <template>
   <div class="fullscreen">
     <top class="header"/>
-    <mid id="mid"/>
-    <bottom id="bottom"/>
+    <mid class="mid"/>
+    <bot class="bottom"/>
   </div>
 </template>
 
 <script>
 export default {
   components: {
-    top: () => import("./components/top.vue"),
-    mid: () => import("./components/mid.vue"),
-    bottom: () => import("./components/bottom.vue")
+    top: () => import('./components/top.vue'),
+    mid: () => import('./components/mid.vue'),
+    bot: () => import('./components/bottom.vue')
   }
-};
+}
 </script>
 
 <style  scoped>
-#bottom {
-  padding: 10px 0px;
-  position: absolute;
-  bottom: 0px;
-  right: 0;
-  left: 0;
+.mid {
+  height: 85vh;
 }
-#mid {
-  height: 80vh;
+.header{
+   height: 10vh;
 }
+
 </style>

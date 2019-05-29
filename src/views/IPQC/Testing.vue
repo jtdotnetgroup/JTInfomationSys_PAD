@@ -47,8 +47,8 @@ export default {
     return {
       title: '质量检验',
       tabItems: [
-        { title: '待检测', value: 'receive', count: 0 },
-        { title: '已检测', value: 'report', count: 0 }
+        { title: '待检验', value: 'receive', count: 0 },
+        { title: '已检验', value: 'report', count: 0 }
       ],
       tabledata: [],
       loading: false,

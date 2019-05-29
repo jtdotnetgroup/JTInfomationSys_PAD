@@ -1,12 +1,18 @@
 <template>
-    <div class="menus">
-        <template  v-for="(item,index) in this.$store.state.menus.items" >
-            <mainItem class="menuItem" :key="index"
-         :path="item.path" :icon="item.icon" :title="item.title"
-         :secTitle="item.secTitle" :count="index"/>
-         <br :key="'br'+ index" v-if="index===3"/>
-        </template>
-    </div>
+  <div class="menus">
+    <template v-for="(item,index) in this.$store.state.menus.items">
+      <mainItem
+        class="menuItem"
+        :key="index"
+        :path="item.path"
+        :icon="item.icon"
+        :title="item.title"
+        :secTitle="item.secTitle"
+        :count="index"
+      />
+      <br :key="'br'+ index" v-if="index===3">
+    </template>
+  </div>
 </template>
 
 <script>
@@ -16,9 +22,7 @@ export default {
     mainItem: () => import('@/components/mainItem.vue')
   },
   data () {
-    return {
-
-    }
+    return {}
   },
   methods: {
     ...mapActions({
@@ -37,17 +41,11 @@ export default {
 </script>
 
 <style scoped>
-    @media screen  {
+@media screen {
+}
 
-    }
-
-    .menuItem{
-        /* display: inline-block; */
-
-        margin:3vw;
-        padding: 5px;
-    }
-    #mid{
-
-    }
+.menuItem {
+  margin: 3vw;
+  padding: 5px;
+}
 </style>
