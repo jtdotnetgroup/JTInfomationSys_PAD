@@ -25,8 +25,8 @@ const account = {
         .then(res => {
           var data = res.data
           if (!data.error) {
-            commit('UPDATE_ACCESSTOKEN', data.result.accessToken)
             sessionStorage.setItem('token', data.result.accessToken)
+            commit('UPDATE_ACCESSTOKEN', data.result.accessToken)
             commit('UPDATE_USERNAME', payload.username)
             resolve()
           } else {
@@ -37,6 +37,7 @@ const account = {
     Logout ({ commit }) {
       commit('UPDATE_ACCESSTOKEN', '')
       commit('UPDATE_USERNAME', '')
+      sessionStorage.removeItem('token')
     }
   }
 }

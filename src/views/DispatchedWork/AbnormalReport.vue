@@ -69,9 +69,11 @@ export default {
       var _this = this
       switch (type) {
         case 'YC': {
+          this.from.FTime = new Date()
           break
         }
         case 'HF': {
+          this.from.FRecoverTime = new Date()
           break
         }
         default: {

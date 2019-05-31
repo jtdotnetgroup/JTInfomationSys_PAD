@@ -11,7 +11,6 @@
         <el-form-item label="密码" prop="password">
           <el-input type="password" clearable v-model="form.password" placeholder></el-input>
         </el-form-item>
-
         <div id="buttons">
           <el-form-item>
             <el-button type="success" @click="onSubmit" icon="el-icon-success">登录</el-button>
@@ -50,54 +49,6 @@ export default {
       var _this = this
       this.$refs['form'].validate(valid => {
         if (valid) {
-          //           const loading = _this.$loading({
-          //             lock: true,
-          //             text: '登录中',
-          //             spinner: 'el-icon-loading',
-          //             background: 'rgba(0, 0, 0, 0.7)'
-          //           })
-          //           axios
-          //             .post('http://localhost:21021/api/TokenAuth/Authenticate', {
-          //               usernameOrEmailAddress: this.form.username,
-          //               password: this.form.password
-          //             })
-          //             .then(res => {
-          //               console.log(res)
-          //               if (res.data.success) {
-          //                 loading.close()
-          //                 var result = res.data.result
-
-          //                 this.$store.commit('UPDATE_ACCESSTOKEN',result.accessToken)
-
-          //               sessionStorage.token=result.accessToken
-          // console.log('1'+  sessionStorage.token)
-          // //                 this.$store.state.commit('UPDATE_ACCESSTOKEN',result.accessToken)
-          // // console.log('2')
-          //                 var obj = {
-          //                   accessToken: result.accessToken,
-          //                   encryptedAccessToken: result.encryptedAccessToken,
-          //                   expireInSeconds: result.expireInSeconds,
-          //                   userId: result.userId
-          //                 }
-          //                 // console.log(obj)
-          //                 this.$message({
-          //                   message: '登录成功！',
-          //                   type: 'success',
-          //                   duration: 500
-          //                 })
-          //                 setInterval(_this.$router.push('/'), 3000)
-          //               } else {
-          //                 _this.$message.error('账号与密码不匹配')
-          //               }
-          //               setTimeout(() => {
-          //                 loading.close()
-          //               }, 2000)
-          //             })
-          //             .catch(err => {
-          //               loading.close()
-
-          //               _this.$message.error('账号与密码不匹配')
-          //             })
           const loading = _this.$loading({
             lock: true,
             text: '登录中',
@@ -114,7 +65,9 @@ export default {
                 loading.close()
                 // console.log(res)
                 // 登录成功
-                this.$router.push('/')
+                setTimeout(() => {
+                  this.$router.push('/')
+                }, 500)
               },
               () => {
                 // 登录失败

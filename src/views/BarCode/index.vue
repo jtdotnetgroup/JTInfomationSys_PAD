@@ -2,6 +2,8 @@
 <template>
     <div class="fullscreen">
         <tableHeader class="header" :title="title" :items="tabItems" @tabChange="handelTabChange" />
+        <el-button type="primary" @click="PreviewTest">打印测试</el-button>
+
     </div>
 </template>
 
@@ -28,6 +30,9 @@ export default {
     },
     currentChange (value) {
 
+    },
+    PreviewTest () {
+      winForm.Preview()
     }
   },
   computed: {

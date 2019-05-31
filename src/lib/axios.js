@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import axios from 'axios'
 import Vuex from 'vuex'
-import { message } from 'element-ui'
+import { Message } from 'element-ui'
 import { store } from '../store.js'
 // Vue.use(axios)
 // Vue.use(Vuex)
@@ -22,6 +22,7 @@ const http = axios.create({
   baseURL: baseURL + '/api/services/app/',
   timeout: 20000
 })
+
 //
 const err = (error) => {
   console.log(error)
@@ -30,11 +31,11 @@ const err = (error) => {
     const token = Vue.ls.get(ACCESS_TOKEN)
     if (error.response.status === 403) {
       console.log('抱歉，你没有权限操作！')
-      message.error('抱歉，你没有权限操作！')
+      Message.error('抱歉，你没有权限操作！')
     }
     if (error.response.status === 401 && !(data.result && data.result.isLogin)) {
       console.log('未授权,请登录')
-      message.error('未授权,请登录')
+      Message.error('未授权,请登录')
       if (token) {
         store.dispatch('Logout').then(() => {
           setTimeout(() => {
@@ -45,11 +46,11 @@ const err = (error) => {
     }
     if (error.response.status === 500) {
       console.log('抱歉，服务器处理请求异常')
-      message.error('抱歉，服务器处理请求异常')
+      Message.error('抱歉，服务器处理请求异常')
     }
     if (error.response.status === 400) {
       console.log(data.error.details)
-      message.error(data.error.details)
+      Message.error(data.error.details)
     }
   }
   return Promise.reject(error)
@@ -57,6 +58,7 @@ const err = (error) => {
 //
 http.interceptors.request.use(function (config) {
   // console.log('dsaasd')
+
   var token = sessionStorage.getItem('token')
   if (token) {
     sessionStorage.setItem('token', token)
@@ -67,10 +69,6 @@ http.interceptors.request.use(function (config) {
   } else {
     // console.log('请重新登录！')
   }
-  // console.log('interceptors:' + this.$store.state.token)
-  // console.log(account.state.accessToken)
-  // config.headers['Authorization'] = account.state.accessToken
-  // 在发送请求之前做些什么
   return config
 }, err)
 

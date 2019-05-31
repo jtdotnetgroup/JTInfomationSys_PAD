@@ -11,7 +11,6 @@ const store = new Vuex.Store({
   modules: {
     menus,
     account
-
   },
   state: {
   },
@@ -20,6 +19,9 @@ const store = new Vuex.Store({
   },
   actions: {
 
+  },
+  getters: {
+    token: state => state.account.accessToken
   }
 })
 

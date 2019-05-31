@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import store from '../store.js'
 
 Vue.use(Router)
 
@@ -62,17 +63,21 @@ const router = new Router({
   ]
 })
 
-// router.beforeEach((to, from, next) => {
-//   // console.log(to)
-//   var token = sessionStorage.getItem('token')
-//   if (token) {  // 通过vuex state获取当前的token是否存在
-//     next();
-//   }
-//   else {
-//     next({
-//       name: 'login'
-//     })
-//   }
-// })
+router.beforeEach((to, from, next) => {
+  // console.log(to)
+  var token=store.getters.token
+  if(token){
+    next();
+  }else{
+    
+    if(to.path!=='/login'){
+      next({path:'/login'})
+    }else{
+      next();
+    }
+  }
+  
+  
+})
 
 export default router;
