@@ -12,16 +12,10 @@ const columns = {
     { id: 'device', label: '设备', width: 60, sort: false },
     { id: 'product', label: '产品', width: 380, sort: false },
     { id: 'startendtime', label: '工序', width: 100, sort: false },
-    { id: '派工', label: '派工数量', width: 140, sort: false },
-    { id: '汇报', label: '汇报数量', width: 120, sort: false }
-  ],
-  finished: [
-    { id: 'billno', label: '派工单号', width: 100, sort: false },
-    { id: 'device', label: '设备生产线', width: 100, sort: false },
-    { id: 'startendtime', label: '开工/完工时间', width: 100, sort: false },
-    { id: 'product', label: '产品', width: 100, sort: false },
-    { id: 'planqty', label: '计划数量', width: 100, sort: false },
-    { id: 'planqty2', label: '计划数量2', width: 100, sort: false }
+    { id: '派工', label: '派工数', width: 140, sort: false },
+    { id: '汇报', label: '汇报数', width: 120, sort: false },
+    { id: '合格', label: '合格', width: 120, sort: false },
+    { id: '不合格', label: '不合格', width: 120, sort: false }
   ]
 }
 

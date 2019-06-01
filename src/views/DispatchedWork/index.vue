@@ -44,6 +44,7 @@
     <AbnormalReport ref="AbnormalReport" @addSuccess="GetData"/>
     <Picking ref="Picking" @addSuccess="GetData"/>
     <Report ref="Report" @addSuccess="GetData"/>
+    <ReportDetailed ref="ReportDetailed" @addSuccess="GetData"/>
     <!--弹框-->
   </div>
 </template>
@@ -98,6 +99,13 @@ export default {
           title: '异常',
           show: false,
           ShowWhe: ['report', 'receive']
+        },
+        {
+          type: '',
+          num: 4,
+          title: '汇报明细',
+          show: true,
+          ShowWhe: ['report']
         }
       ]
     }
@@ -108,7 +116,8 @@ export default {
     OpenWork: () => import('./OpenWork'),
     AbnormalReport: () => import('./AbnormalReport'),
     Picking: () => import('./Picking'),
-    Report: () => import('./Report')
+    Report: () => import('./Report'),
+    ReportDetailed: () => import('./ReportDetailed')
   },
   // 声明方法
   methods: {
@@ -141,6 +150,11 @@ export default {
           obj = { FID: row.FID, FSrcID: row.FSrcID }
           _this.$refs.AbnormalReport.show(obj)
           break
+        // 汇报明细
+        case 4:
+          obj = { FID: row.FID, FSrcID: row.FSrcID }
+          _this.$refs.ReportDetailed.show(obj)
+          break
         // 默认提示功能尚未开发
         default:
           break
@@ -150,6 +164,7 @@ export default {
       this.tabvalue = value
       this.showmenu()
       this.GetData()
+      this.$refs.ReportDetailed.Show({ ICMODispBillID: '1' })
     },
     sizeChange (value) {},
     currentChange (value) {},

@@ -28,6 +28,7 @@
       >{{value}}</el-button>
       <br>
       <br>
+      <el-button plain round @click="Empty()">清空</el-button>
       <el-button type="danger" plain round @click="DELWZ()">删除</el-button>
       <el-button type="primary" plain round @click="onSubmit('HB')">汇报</el-button>
     </el-form>
@@ -61,6 +62,9 @@ export default {
         0,
         this.from.FFinishAuxQty.length - 1
       )
+    },
+    Empty () {
+      this.from.FFinishAuxQty = ''
     },
     show (obj) {
       this.Report = true

@@ -42,6 +42,10 @@ const router = new Router({
       path: '/IPQC',
       name: 'IPQC',
       component: () => import('../views/IPQC/Testing.vue')
+    },{
+      path: '/IPQC/InspectionDetails',
+      name: 'IPQCInspectionDetails',
+      component: () => import('../views/IPQC/InspectionDetails.vue')
     },
     {
       path: '/IPQC/Report',
