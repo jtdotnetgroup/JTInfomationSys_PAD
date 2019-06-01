@@ -7,7 +7,7 @@
       <el-button
         round
         v-for="(value, index) in inputNum1"
-        :key="index"
+        :key="'1'+index"
         @click="AddWZ({value})"
       >{{value}}</el-button>
       <br>
@@ -15,7 +15,7 @@
       <el-button
         round
         v-for="(value, index) in inputNum2"
-        :key="index"
+        :key="'2'+index"
         @click="AddWZ({value})"
       >{{value}}</el-button>
       <br>
@@ -23,7 +23,7 @@
       <el-button
         round
         v-for="(value, index) in inputNum3"
-        :key="index"
+        :key="'3'+index"
         @click="AddWZ({value})"
       >{{value}}</el-button>
       <br>
@@ -75,11 +75,12 @@ export default {
     },
     // 提交
     onSubmit (type) {
+      var _this = this
       //   console.log(obj);
       switch (type) {
         case 'HB': {
           this.HBloading = true
-          DataPUT('ICMODispBill/UpdateFFinishAuxQty', this.HBFrom).then(
+          DataPUT('ICMODispBill/UpdateFFinishAuxQty', this.from).then(
             res => {
               //   console.log(res);
               this.$notify({
@@ -105,19 +106,20 @@ export default {
     // 明细
     Detailed (obj) {
       this.from.FFinishAuxQty = obj.FFinishAuxQty
-      this.from.FID = obj.FID * 1
+      this.from.FID = obj.FID
       //   console.log(obj);
-      GetAll('ICException/Get', obj).then(
-        res => {
-          //   console.log(res); // 返回对象
-          if (res.status === 200) {
-            var result = res.data.result
-          }
-        },
-        response => {
-          console.log('error')
-        }
-      )
+      // GetAll('ICException/Get', obj).then(
+      //   res => {
+      //     //   console.log(res); // 返回对象
+      //     if (res.status === 200) {
+      //       var result = res.data.result
+
+      //     }
+      //   },
+      //   response => {
+      //     console.log('error')
+      //   }
+      // )
     }
   }
 }

@@ -128,11 +128,11 @@ export default {
     handle: function (type, index, row) {
       var _this = this
       var obj = {}
-      // console.log(index, row);
+      console.log(index, row)
       switch (type) {
         // 汇报
         case 0:
-          obj = { FFinishAuxQty: row.汇报, FID: row.FID * 1 }
+          obj = { FFinishAuxQty: row.汇报 * 1, FID: row.FID }
           _this.$refs.Report.show(obj)
           break
         // 领料
