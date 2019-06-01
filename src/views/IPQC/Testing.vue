@@ -78,12 +78,27 @@ export default {
     sizeChange (value) {},
     currentChange (value) {},
     handle: function (type, index, row) {
+      console.log(row)
       var _this = this
-      var obj = { FID: row.fid, Step: row.工序, 汇报数: row.汇报, FOperID: row.FOperID, FBillNo: row.FBillNo, FItemID: row.FItemID }
+      var obj = {
+        FID: row.fid,
+        Step: row.工序,
+        汇报数: row.汇报,
+        FOperID: row.FOperID,
+        FBillNo: row.FBillNo,
+        FItemID: row.FItemID,
+        F_102: row.F_102
+      }
       //  console.log(obj)
+      // _this.$router.push({
+      //   // 核心语句
+      //   name: 'IPQCReport',
+      //   // path: "/IPQC/Report", // 跳转的路径
+      //   query: obj
+      // })
       _this.$router.push({
         // 核心语句
-        name: 'IPQCReport',
+        name: 'IPQCInspectionDetails',
         // path: "/IPQC/Report", // 跳转的路径
         query: obj
       })
@@ -134,6 +149,7 @@ export default {
             TabaleObj.FOperID = item.fOperID
             TabaleObj.FBillNo = item.派工单号
             TabaleObj.FItemID = item.fItemID
+            TabaleObj.F_102 = item.f_102
             TableList.push(TabaleObj)
           })
           // 重新渲染列表

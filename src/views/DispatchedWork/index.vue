@@ -152,8 +152,8 @@ export default {
           break
         // 汇报明细
         case 4:
-          obj = { FID: row.FID, FSrcID: row.FSrcID }
-          _this.$refs.ReportDetailed.show(obj)
+          // obj = { ICMODispBillID: row.FID, FSrcID: row.FSrcID }
+          _this.$refs.ReportDetailed.Show(row)
           break
         // 默认提示功能尚未开发
         default:
@@ -164,7 +164,6 @@ export default {
       this.tabvalue = value
       this.showmenu()
       this.GetData()
-      this.$refs.ReportDetailed.Show({ ICMODispBillID: '1' })
     },
     sizeChange (value) {},
     currentChange (value) {},

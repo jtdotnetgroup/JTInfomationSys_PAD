@@ -7,6 +7,18 @@
     padding: 20px 0px;">
       <el-col :span="2">
         <div class="grid-content">
+          <div class="demo-input-suffix" style="line-height:40px;font-size: 20px;">检验单号：</div>
+        </div>
+      </el-col>
+      <el-col :span="4">
+        <div class="grid-content">
+          <div class="demo-input-suffix">
+            <el-input v-model=" this.$route.query.fBillNo" disabled="disabled" placeholder="请输检验单号"></el-input>
+          </div>
+        </div>
+      </el-col>
+      <el-col :span="2">
+        <div class="grid-content">
           <div class="demo-input-suffix" style="line-height:40px;font-size: 20px;">工序：</div>
         </div>
       </el-col>
@@ -29,10 +41,7 @@
           </div>
         </div>
       </el-col>
-      <el-col :span="2">
-        <div class="grid-content"></div>
-      </el-col>
-      <el-col :span="10">
+      <el-col :span="6">
         <div class="grid-content" style="text-align: right;padding-right: 15px;">
           <el-button @click="Cancel" plain>取消</el-button>
           <el-button @click="OnSubmit" type="success" plain>提交</el-button>
@@ -115,7 +124,7 @@ export default {
               num: 0,
               typecolor: 'back',
               numcolor: 'back',
-              IsAddDel: true
+              IsAddDel: false
             },
             {
               key: 'FCheckAuxQty',
@@ -140,6 +149,22 @@ export default {
               typecolor: 'red',
               numcolor: 'red',
               IsAddDel: true
+            },
+            {
+              key: 'BZS',
+              type: '包装数',
+              num: this.$route.query.F_102,
+              typecolor: 'red',
+              numcolor: 'red',
+              IsAddDel: false
+            },
+            {
+              key: 'FYSQty',
+              type: '余数',
+              num: 0,
+              typecolor: 'red',
+              numcolor: 'red',
+              IsAddDel: false
             }
           ]
         },
@@ -239,6 +264,7 @@ export default {
     // 提交
     OnSubmit () {
       var _this = this
+
       if (_this.from.FBillNo.length === 0) {
         _this.$message({
           showClose: true,
@@ -260,19 +286,22 @@ export default {
           fFailAuxQtyM: _this.AllCol[1].Col[1].num,
           fPassAuxQtyP: _this.AllCol[1].Col[2].num,
           fPassAuxQtyM: _this.AllCol[1].Col[3].num,
-          fNote: ''
+          fNote: '',
+          fYSQty: this.$route.query.F_102 // 后台特殊处理
         },
         icQualityRptsList: []
       }
-      _this.AllCol[2].Col.forEach(item => {
-        obj.icQualityRptsList.push({
-          FID: 0,
-          FItemID: item.key,
-          FAuxQty: item.num,
-          FRemark: '',
-          FNote: ''
+      if (_this.AllCol.length > 2) {
+        _this.AllCol[2].Col.forEach(item => {
+          obj.icQualityRptsList.push({
+            FID: 0,
+            FItemID: item.key,
+            FAuxQty: item.num,
+            FRemark: '',
+            FNote: ''
+          })
         })
-      })
+      }
       // console.log(obj)
       // return;
       DataAddOrPUT('ICMOInspectBill/ICMODispBillSave', obj)
@@ -307,8 +336,8 @@ export default {
             var result = res.data.result
             var Bill = result.icmoInspectBill
             var icQualityRptsList = result.icQualityRptsList
-            if (Bill.FAuxQty * 1 === 0) {
-              Bill.FAuxQty = _this.from.汇报数 * 1
+            if (Bill.fAuxQty * 1 === 0) {
+              Bill.fAuxQty = _this.from.汇报数 * 1
             }
             var obj1 = {
               ColKey: 'col1',
@@ -321,7 +350,7 @@ export default {
                   num: Bill.fAuxQty * 1,
                   typecolor: 'back',
                   numcolor: 'back',
-                  IsAddDel: true
+                  IsAddDel: false
                 },
                 {
                   key: 'FCheckAuxQty',
@@ -346,6 +375,22 @@ export default {
                   typecolor: 'red',
                   numcolor: 'red',
                   IsAddDel: true
+                },
+                {
+                  key: 'BZS',
+                  type: '包装数',
+                  num: this.$route.query.F_102,
+                  typecolor: 'red',
+                  numcolor: 'red',
+                  IsAddDel: false
+                },
+                {
+                  key: 'FYSQty',
+                  type: '余数',
+                  num: 0,
+                  typecolor: 'red',
+                  numcolor: 'red',
+                  IsAddDel: false
                 }
               ]
             }
@@ -408,34 +453,99 @@ export default {
             //     IsAddDel: true
             //   });
             // });
-            _this.TB_BadItemRelation.forEach(tmp => {
-              var IsShow = true
-              var FItemID = tmp.fid
-              var FName = tmp.fName
-              var FAuxQty = 0
-              IsShow = tmp.fDeleted === 1
-              icQualityRptsList.forEach(item => {
-                if (item.fItemID === tmp.fid) {
-                  IsShow = true
-                  FAuxQty = item.fAuxQty
+            if (_this.TB_BadItemRelation.length === 0) {
+              this.GetTB_BadItemRelation_SeticQualityRptsList(
+                icQualityRptsList,
+                obj3
+              )
+            } else {
+              _this.TB_BadItemRelation.forEach(tmp => {
+                console.log(tmp.fDeleted)
+                var IsShow = tmp.fDeleted
+                var FItemID = tmp.fid
+                var FName = tmp.fName
+                var FAuxQty = 0
+                icQualityRptsList.forEach(item => {
+                  if (item.fItemID === tmp.fid) {
+                    IsShow = true
+                    FAuxQty = item.fAuxQty
+                  }
+                })
+                if (IsShow) {
+                  obj3.Col.push({
+                    key: FItemID,
+                    type: FName,
+                    num: FAuxQty,
+                    typecolor: 'back',
+                    numcolor: 'back',
+                    IsAddDel: true
+                  })
                 }
               })
-              if (IsShow) {
-                obj3.Col.push({
-                  key: FItemID,
-                  type: FName,
-                  num: FAuxQty,
-                  typecolor: 'back',
-                  numcolor: 'back',
-                  IsAddDel: true
-                })
-              }
-            })
+            }
             // console.log(_this.TB_BadItemRelation)
-
+            _this.AllCol = []
             _this.AllCol = [obj1, obj2, obj3]
+            var nums = 0
+            _this.AllCol.forEach(e => {
+              e.Col.forEach(tmp => {
+                nums++
+              })
+            })
+            _this.tabItems.forEach(item => {
+              item.count = item.value === _this.tabvalue ? nums : item.count
+            })
           }
           _this.loading = false
+        })
+        .catch(function () {
+          _this.loading = false
+        })
+    },
+    GetTB_BadItemRelation_SeticQualityRptsList (icQualityRptsList, obj3) {
+      var _this = this
+      if (_this.AllCol.length > 2) { return }
+      _this.loading = true
+      // 0 false ,1 true
+      GetAll('TB_BadItemRelation/GetAll', {})
+        .then(res => {
+          var result = res.data.result
+          _this.TB_BadItemRelation = result
+          _this.TB_BadItemRelation.forEach(tmp => {
+            console.log(
+              'GetTB_BadItemRelation_SeticQualityRptsList' + tmp.fDeleted
+            )
+            var IsShow = tmp.fDeleted
+            var FItemID = tmp.fid
+            var FName = tmp.fName
+            var FAuxQty = 0
+            icQualityRptsList.forEach(item => {
+              if (item.fItemID === tmp.fid) {
+                IsShow = true
+                FAuxQty = item.fAuxQty
+              }
+            })
+            if (IsShow) {
+              obj3.Col.push({
+                key: FItemID,
+                type: FName,
+                num: FAuxQty,
+                typecolor: 'back',
+                numcolor: 'back',
+                IsAddDel: true
+              })
+            }
+          })
+          _this.AllCol.push(obj3)
+          var nums = 0
+          _this.AllCol.forEach(e => {
+            e.Col.forEach(tmp => {
+              nums++
+            })
+          })
+          _this.tabItems.forEach(item => {
+            item.count = item.value === _this.tabvalue ? nums : item.count
+          })
         })
         .catch(function () {
           _this.loading = false
@@ -451,7 +561,7 @@ export default {
     this.from.FID = this.$route.query.FID
     this.from.FItemID = this.$route.query.FItemID
     this.from.Step = this.$route.query.Step
-    this.from.汇报数 = this.$route.query.汇报数
+    this.from.汇报数 = this.$route.query.FAuxQty
     this.from.FOperID = this.$route.query.FOperID
     this.from.FBillNo = this.$route.query.FBillNo
     this.GetTB_BadItemRelation()
