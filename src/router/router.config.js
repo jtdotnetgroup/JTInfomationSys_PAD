@@ -57,6 +57,11 @@ export const asyncRouterMap = [
     component: () => import('../views/IPQC/Report.vue')
   },
   {
+    path: '/IPQC/InspectionDetails',
+    name: 'IPQCInspectionDetails',
+    component: () => import('../views/IPQC/InspectionDetails.vue')
+  },
+  {
     path: '/Stock',
     name: 'Stock',
     meta: { permission: 'TouchPad.Stock', icon: './imgs/icons/L_Stock.png', title: '库存查询', secTitle: '缺料类' },
