@@ -2,14 +2,13 @@
   <!-- 页面 -->
   <div class="fullscreen">
     <tableHeader
-      v-loading="loading"
       class="header"
       :title="title"
       :items="tabItems"
       @tabChange="handelTabChange"
     />
     <!-- 表格 -->
-    <el-table :data="tabledata" border stripe>
+    <el-table :data="tabledata" border stripe  v-loading="loading">
       <el-table-column v-for="col in columnHeader" :prop="col.id" :key="col.id" :label="col.label"></el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
@@ -41,7 +40,7 @@
 <!-- 脚本 -->
 <script>
 // 数据处理
-import { GetAll } from '@/api/mission'
+import { GetAll, DataAddOrPUT, DataPUT, DataPUT2 } from '@/api/mission'
 // 表格的列
 import columns from './TestingtableColumns.js'
 // 派工单页面
@@ -68,9 +67,10 @@ export default {
           title: '检验',
           show: true,
           ShowWhe: ['receive']
-        }, {
-          type: '',
-          num: 0,
+        },
+        {
+          type: 'success',
+          num: 1,
           title: '已检验',
           show: true,
           ShowWhe: ['receive']
@@ -90,6 +90,7 @@ export default {
     handle: function (type, index, row) {
       console.log(row)
       var _this = this
+      //
       var obj = {
         FID: row.fid,
         Step: row.工序,
@@ -99,19 +100,43 @@ export default {
         FItemID: row.FItemID,
         F_102: row.F_102
       }
-      //  console.log(obj)
-      // _this.$router.push({
-      //   // 核心语句
-      //   name: 'IPQCReport',
-      //   // path: "/IPQC/Report", // 跳转的路径
-      //   query: obj
-      // })
-      _this.$router.push({
-        // 核心语句
-        name: 'IPQCInspectionDetails',
-        // path: "/IPQC/Report", // 跳转的路径
-        query: obj
-      })
+      switch (type * 1) {
+        case 0:
+          _this.$router.push({
+            // 核心语句
+            name: 'IPQCInspectionDetails',
+            // path: "/IPQC/Report", // 跳转的路径
+            query: obj
+          })
+          break
+        case 1:
+          _this.ZJCompleted(obj)
+          break
+        default:
+          break
+      }
+    },
+    //
+    ZJCompleted (obj) {
+      var _this = this
+      obj.FStates = 2
+      _this.loading = true
+      DataPUT2('ICMODispBill/UpdateFStatus', obj)
+        .then(res => {
+          console.log(res)
+          if (res.status === 200) {
+            _this.GetData()
+            _this.$message({
+              message: '保存',
+              type: 'success'
+            })
+          }
+          _this.loading = false
+        })
+        .catch(function () {
+          _this.loading = false
+          _this.$message.error('操作失败，请稍后重试！')
+        })
     },
     GetData () {
       var Status = this.tabvalue === 'receive' ? 0 : 1
@@ -155,7 +180,8 @@ export default {
             TabaleObj.汇报 = item.汇报数量
             TabaleObj.合格数量 = item.合格数量
             TabaleObj.不合格数量 = item.不合格数量
-            TabaleObj.状态 = item.派工数量 <= item.合格数量 ? '已完成' : '未完成'
+            TabaleObj.状态 =
+              item.派工数量 <= item.合格数量 ? '已完成' : '未完成'
             TabaleObj.fid = item.fid
             TabaleObj.FOperID = item.fOperID
             TabaleObj.FBillNo = item.派工单号

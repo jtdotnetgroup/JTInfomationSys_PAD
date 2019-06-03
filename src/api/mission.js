@@ -44,6 +44,16 @@ export function DataPUT (url, params) {
     }
   })
 }
+export function DataPUT2 (url, params) {
+  return axios({
+    url: url,
+    method: 'PUT',
+    params: params,
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8'
+    }
+  })
+}
 // 数据添加和修改
 export function DataAddOrPUT (url, params) {
   return axios({
