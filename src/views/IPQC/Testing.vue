@@ -55,7 +55,7 @@ export default {
       currentPage: 0,
       pageSize: 20,
       totalNum: 0,
-      tabvalue: 'receive',
+      tabvalue: 'report',
       tableColumns: columns,
       funmenu: [
         {
@@ -145,6 +145,7 @@ export default {
             TabaleObj.汇报 = item.汇报数量
             TabaleObj.合格数量 = item.合格数量
             TabaleObj.不合格数量 = item.不合格数量
+            TabaleObj.状态 = item.派工数量 <= item.合格数量 ? '已完成' : '未完成'
             TabaleObj.fid = item.fid
             TabaleObj.FOperID = item.fOperID
             TabaleObj.FBillNo = item.派工单号
