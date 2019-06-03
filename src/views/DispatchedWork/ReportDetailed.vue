@@ -123,7 +123,7 @@ export default {
           type: '',
           num: 0,
           title: '修改汇报',
-          show: true,
+          show: false,
           ShowWhe: ['report']
         }
       ],

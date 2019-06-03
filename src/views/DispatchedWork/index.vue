@@ -72,13 +72,13 @@ export default {
       tabvalue: 'receive', // 选中显示卡
       tableColumns: columns, // 表格的列
       funmenu: [
-        {
-          type: '',
-          num: 0,
-          title: '汇报',
-          show: true,
-          ShowWhe: ['report']
-        },
+        // {
+        //  type: '',
+        //  num: 0,
+        //  title: '汇报',
+        //  show: true,
+        //  ShowWhe: ['report']
+        // },
         {
           type: '',
           num: 1,
@@ -103,7 +103,7 @@ export default {
         {
           type: '',
           num: 4,
-          title: '汇报明细',
+          title: '汇报',
           show: true,
           ShowWhe: ['report']
         }

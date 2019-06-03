@@ -1,4 +1,5 @@
 <template>
+  <!-- 页面 -->
   <div class="fullscreen">
     <tableHeader
       v-loading="loading"
@@ -7,6 +8,7 @@
       :items="tabItems"
       @tabChange="handelTabChange"
     />
+    <!-- 表格 -->
     <el-table :data="tabledata" border stripe>
       <el-table-column v-for="col in columnHeader" :prop="col.id" :key="col.id" :label="col.label"></el-table-column>
       <el-table-column label="操作">
@@ -23,6 +25,7 @@
         </template>
       </el-table-column>
     </el-table>
+    <!-- 分页 -->
     <el-pagination
       @size-change="sizeChange"
       @current-change="currentChange"
@@ -35,6 +38,7 @@
     ></el-pagination>
   </div>
 </template>
+<!-- 脚本 -->
 <script>
 // 数据处理
 import { GetAll } from '@/api/mission'
@@ -47,8 +51,8 @@ export default {
     return {
       title: '质量检验',
       tabItems: [
-        { title: '待检验', value: 'receive', count: 0 },
-        { title: '已检验', value: 'report', count: 0 }
+        // { title: '待检验', value: 'receive', count: 0 },
+        { title: '质量检验', value: 'report', count: 0 }
       ],
       tabledata: [],
       loading: false,
@@ -62,6 +66,12 @@ export default {
           type: '',
           num: 0,
           title: '检验',
+          show: true,
+          ShowWhe: ['receive']
+        }, {
+          type: '',
+          num: 0,
+          title: '已检验',
           show: true,
           ShowWhe: ['receive']
         }
