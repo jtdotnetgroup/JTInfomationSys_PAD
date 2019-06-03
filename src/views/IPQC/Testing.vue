@@ -10,9 +10,10 @@
     <!-- 表格 -->
     <el-table :data="tabledata" border stripe  v-loading="loading">
       <el-table-column v-for="col in columnHeader" :prop="col.id" :key="col.id" :label="col.label"></el-table-column>
-      <el-table-column label="操作">
+      <el-table-column label="操作" align="center">
         <template slot-scope="scope">
           <el-button
+          style="text-align:center"
             plain
             round
             v-for="item in funmenu"
