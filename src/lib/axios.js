@@ -19,7 +19,7 @@ if (url.indexOf('http://222.72.134.71') >= 0) {
 }
 // console.log(baseURL)
 const http = axios.create({
-  baseURL: baseURL + '/api/services/app/',
+  baseURL: baseURL,
   timeout: 20000
 })
 

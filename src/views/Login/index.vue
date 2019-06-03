@@ -60,21 +60,19 @@ export default {
               username: this.form.username,
               password: this.form.password
             })
-            .then(
-              res => {
-                loading.close()
-                // console.log(res)
-                // 登录成功
-                setTimeout(() => {
-                  this.$router.push('/')
-                }, 500)
-              },
-              () => {
-                // 登录失败
-                loading.close()
-                console.log('登录失败')
-              }
-            )
+            .then(res => {
+              loading.close()
+              // console.log(res)
+              // 登录成功
+              setTimeout(() => {
+                this.$router.push('/')
+              }, 500)
+            })
+            .catch(() => {
+              // 登录失败
+              loading.close()
+              console.log('登录失败')
+            })
         } else {
         }
       })

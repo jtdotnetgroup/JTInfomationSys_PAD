@@ -1,22 +1,28 @@
-import { login } from '@/api/account'
+import { login, GetUserInfo } from '@/api/account'
 import { resolve, reject } from 'q'
 
 const account = {
   namespaced: true,
   state: {
-    accessToken: '',
-    username: '',
-    empname: ''
+    accessToken: localStorage.getItem('token'), // 从localStoreage中读取
+    username: localStorage.getItem('username'), // 从localStoreage中读取
+    empname: '',
+    permissions: ''
   },
   mutations: {
     UPDATE_ACCESSTOKEN (state, payload) {
       state.accessToken = payload
+      localStorage.setItem('token', payload)// 写入localStoreage中，解决刷新后由于token丢失重回到登录页面的问题
     },
     UPDATE_USERNAME (state, payload) {
       state.username = payload
+      localStorage.setItem('username', payload)
     },
     UPDATE_EMPNAME (state, payload) {
       state.empname = payload
+    },
+    SET_PERMISSIONS: (state, permissions) => {
+      state.permissions = permissions
     }
   },
   actions: {
@@ -30,14 +36,32 @@ const account = {
             commit('UPDATE_USERNAME', payload.username)
             resolve()
           } else {
-            reject()
+            reject(data)
           }
         })
     },
     Logout ({ commit }) {
       commit('UPDATE_ACCESSTOKEN', '')
       commit('UPDATE_USERNAME', '')
+      commit('SET_PERMISSIONS', {})
       sessionStorage.removeItem('token')
+    },
+
+    GetInfo ({ commit }) {
+      return new Promise((resolve, reject) => {
+        GetUserInfo().then(response => {
+          const result = response.data.result
+          console.log(result)
+          if (result.auth.grantedPermissions) {
+            commit('SET_PERMISSIONS', result.auth.grantedPermissions)
+          } else {
+            reject(new Error('grantedPermissions must array'))
+          }
+          resolve(result)
+        }).catch(error => {
+          reject(error)
+        })
+      })
     }
   }
 }
