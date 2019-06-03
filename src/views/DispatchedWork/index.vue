@@ -211,6 +211,8 @@ export default {
             TabaleObj.生产日期 = item.生产日期
             TabaleObj.派工 = item.派工数量
             TabaleObj.汇报 = item.汇报数量
+            TabaleObj.合格 = item.合格数量
+            TabaleObj.不合格 = item.不合格数量
             TabaleObj.FID = item.fid
             TabaleObj.FSrcID = item.fsrcID
             TableList.push(TabaleObj)
