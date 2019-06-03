@@ -1,18 +1,12 @@
 <template>
-  <div class="menus">
-    <template v-for="(item,index) in this.$store.state.menus.items">
-      <mainItem
-        class="menuItem"
-        :key="index"
-        :path="item.path"
-        :icon="item.icon"
-        :title="item.title"
-        :secTitle="item.secTitle"
-        :count="index"
-      />
-      <br :key="'br'+ index" v-if="index===3">
-    </template>
-  </div>
+    <div class="menus">
+        <template  v-for="(item,index) in menus" >
+            <mainItem class="menuItem" :key="index" v-if="item.meta"
+         :path="item.path" :icon="item.meta.icon" :title="item.meta.title"
+         :secTitle="item.meta.secTitle" :count="index"/>
+         <br :key="'br'+ index" v-if="index===3"/>
+        </template>
+    </div>
 </template>
 
 <script>
@@ -35,6 +29,11 @@ export default {
   computed: {
     username () {
       return this.$store.state.account.username
+    },
+    menus () {
+      return this.$store.getters.addRouters.filter(e => {
+        return !!e.meta
+      })
     }
   }
 }
