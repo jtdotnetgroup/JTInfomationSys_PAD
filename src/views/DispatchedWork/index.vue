@@ -10,13 +10,14 @@
         v-for="col in columnHeader"
         :prop="col.id"
         :key="col.id"
+        :align="col.align"
         :label="col.label"
         :width="col.width"
         v-show="false"
       ></el-table-column>
-      <el-table-column label="操作" fixed="right">
+      <el-table-column label="操作" align="center">
         <template slot-scope="scope">
-          <el-button
+          <el-button style="text-align: center"
             plain
             round
             v-for="item in funmenu"

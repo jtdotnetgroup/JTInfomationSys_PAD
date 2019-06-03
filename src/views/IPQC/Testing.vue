@@ -8,10 +8,11 @@
       @tabChange="handelTabChange"
     />
     <el-table :data="tabledata" border stripe>
-      <el-table-column v-for="col in columnHeader" :prop="col.id" :key="col.id" :label="col.label"></el-table-column>
-      <el-table-column label="操作">
-        <template slot-scope="scope">
+      <el-table-column v-for="col in columnHeader"  :align="col.align" :prop="col.id" :key="col.id" :label="col.label"></el-table-column>
+      <el-table-column label="操作" align="center">
+        <template slot-scope="scope" >
           <el-button
+          style="text-align:center"
             plain
             round
             v-for="item in funmenu"

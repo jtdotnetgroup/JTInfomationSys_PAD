@@ -106,4 +106,9 @@ tr {
   padding: 5px !important;
   margin-top: 15px !important;
 }
+
+.el-table th.gutter{
+    display: table-cell!important;
+}
+
 </style>

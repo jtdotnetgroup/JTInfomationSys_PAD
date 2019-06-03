@@ -17,13 +17,15 @@
         :key="col.id"
         :label="col.label"
         :width="col.width"
+        :align="col.align"
         v-show="false"
       ></el-table-column>
       <!-- 操作功能 -->
-      <el-table-column label="操作" fixed="right">
+      <el-table-column label="操作" fixed="right" align="center">
         <!-- 生成操作按钮 -->
-        <template slot-scope="scope">
+        <template slot-scope="scope" >
           <el-button
+            style="text-align:center"
             plain
             round
             v-for="item in funmenu"
@@ -48,17 +50,17 @@
 // 数据处理
 import { GetAll, DataPUT, DataAddOrPUT } from '@/api/mission'
 const column = [
-  { id: 'fBillNo', label: '检验单号', width: 200, sort: false },
-  { id: 'FStatus', label: '状态', width: 90, sort: false },
-  { id: 'FAuxQty', label: '汇报数', width: 90, sort: false },
-  { id: 'FCheckAuxQty', label: '检验数', width: 90, sort: false },
-  { id: 'FPassAuxQty', label: '合格数', width: 90, sort: false },
-  { id: 'FFailAuxQty', label: '不合格', width: 90, sort: false },
-  { id: 'FYSQty', label: '余数', width: 90, sort: false },
-  { id: 'FBillTime', label: '汇报日期', width: 160, sort: false },
-  { id: 'FInspector', label: '检验员', width: 100, sort: false },
-  { id: 'FInspectTime', label: '检验时间', width: 160, sort: false },
-  { id: 'FNote', label: '说明', sort: false }
+  { id: 'fBillNo', label: '检验单号', width: 200, sort: false, align: 'center' },
+  { id: 'FStatus', label: '状态', width: 100, sort: false, align: 'center' },
+  { id: 'FAuxQty', label: '汇报数', width: 100, sort: false, align: 'center' },
+  { id: 'FCheckAuxQty', label: '检验数', width: 100, sort: false, align: 'center' },
+  { id: 'FPassAuxQty', label: '合格数', width: 100, sort: false, align: 'center' },
+  { id: 'FFailAuxQty', label: '不合格', width: 100, sort: false, align: 'center' },
+  { id: 'FYSQty', label: '余数', width: 100, sort: false, align: 'center' },
+  { id: 'FBillTime', label: '汇报日期', width: 170, sort: false, align: 'center' },
+  { id: 'FInspector', label: '检验员', width: 100, sort: false, align: 'center' },
+  { id: 'FInspectTime', label: '检验时间', width: 170, sort: false, align: 'center' },
+  { id: 'FNote', label: '说明', sort: false, align: 'center' }
 ]
 //
 export default {
