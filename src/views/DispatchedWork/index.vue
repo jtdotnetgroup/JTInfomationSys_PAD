@@ -15,7 +15,7 @@
         :width="col.width"
         v-show="false"
       ></el-table-column>
-      <el-table-column label="操作" align="center">
+      <el-table-column label="操作" align="center" fixed="right" width="200">
         <template slot-scope="scope">
           <el-button style="text-align: center"
             plain

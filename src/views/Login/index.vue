@@ -31,7 +31,7 @@ export default {
   name: 'login',
   data () {
     return {
-      title: '系统登录',
+      title: '车间自助工作台系统',
       form: {
         username: '',
         password: ''

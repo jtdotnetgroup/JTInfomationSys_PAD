@@ -8,9 +8,9 @@
       @tabChange="handelTabChange"
     />
     <!-- 表格 -->
-    <el-table :data="tabledata" border stripe  v-loading="loading">
-      <el-table-column v-for="col in columnHeader" :prop="col.id" :key="col.id" :label="col.label"></el-table-column>
-      <el-table-column label="操作" align="center">
+    <el-table :data="tabledata" border stripe  v-loading="loading"  max-height="80vh">
+      <el-table-column v-for="col in columnHeader" :prop="col.id" :key="col.id" :label="col.label" :width="col.width"></el-table-column>
+      <el-table-column label="操作" align="center"  fixed="right" width="200">
         <template slot-scope="scope">
           <el-button
           style="text-align:center"

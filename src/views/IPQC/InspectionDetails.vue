@@ -21,7 +21,7 @@
         v-show="false"
       ></el-table-column>
       <!-- 操作功能 -->
-      <el-table-column label="操作" fixed="right" align="center">
+      <el-table-column label="操作"  fixed="right" width="150" align="center">
         <!-- 生成操作按钮 -->
         <template slot-scope="scope" >
           <el-button

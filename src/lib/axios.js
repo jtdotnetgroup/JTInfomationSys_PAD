@@ -11,8 +11,9 @@ var url = window.location.host
 var baseURL = ''
 if (url.indexOf('http://222.72.134.71') >= 0) {
   baseURL = 'http://222.72.134.71:8093'
-} else if (url.indexOf('192.168.1.207') >= 0) {
-  baseURL = 'http://192.168.1.177:8088'
+} else if (url.indexOf('192.168.1') >= 0) {
+  // baseURL = 'http://192.168.1.177:8088'
+  baseURL = 'http://192.168.1.215:8099'
 } else if (url.indexOf('localhost') >= 0) {
   // 开发环境
   baseURL = 'http://localhost:21021'
