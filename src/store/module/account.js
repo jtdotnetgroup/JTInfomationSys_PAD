@@ -38,6 +38,8 @@ const account = {
           } else {
             reject(data)
           }
+        }).catch(err => {
+          reject(err)
         })
     },
     Logout ({ commit }) {
