@@ -1,12 +1,19 @@
 <template>
-    <div class="menus">
-        <template  v-for="(item,index) in menus" >
-            <mainItem class="menuItem" :key="index" v-if="item.meta"
-         :path="item.path" :icon="item.meta.icon" :title="item.meta.title"
-         :secTitle="item.meta.secTitle" :count="index"/>
-         <br :key="'br'+ index" v-if="index===3"/>
-        </template>
-    </div>
+  <div class="menus">
+    <template v-for="(item,index) in menus">
+      <mainItem
+        class="menuItem"
+        :key="index"
+        v-if="item.meta"
+        :path="item.path"
+        :icon="item.meta.icon"
+        :title="item.meta.title"
+        :secTitle="item.meta.secTitle"
+        :count="index"
+      />
+      <br :key="'br'+ index" v-if="index===3">
+    </template>
+  </div>
 </template>
 
 <script>
