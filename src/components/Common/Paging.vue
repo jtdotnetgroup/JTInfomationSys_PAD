@@ -118,7 +118,7 @@ export default {
       if (_this.TotalNum === 0) {
         _this.Page.TotalPage = 1
       } else {
-        _this.Page.TotalPage = Math.ceil(v.TotalNum / _this.PageSize) * 1 // Math.ceil 为向上取整,有小数就整数部分加1 Math.ceil(5/2)  结果= 3
+        _this.Page.TotalPage = Math.ceil(_this.TotalNum / _this.PageSize) * 1 // Math.ceil 为向上取整,有小数就整数部分加1 Math.ceil(5/2)  结果= 3
       }
       _this.Page.TotalPage = _this.Page.TotalPage === 0 ? 1 : _this.Page.TotalPage
       // 生成下拉分页并且清空之前的分页
