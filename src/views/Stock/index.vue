@@ -1,7 +1,9 @@
 
 <template>
   <div class="fullscreen">
+    <!-- 标题栏目 -->
     <tableHeader class="header" :title="title" :items="tabItems" @tabChange="handelTabChange"/>
+    <!-- 表格 -->
     <el-table :data="tabledata" border stripe>
       <el-table-column
         v-for="col in columns"
@@ -15,7 +17,7 @@
         </template>
       </el-table-column>-->
     </el-table>
-    <el-pagination
+    <!-- <el-pagination
       @size-change="sizeChange"
       @current-change="currentChange"
       :current-page="currentPage"
@@ -24,23 +26,10 @@
       layout="prev, pager, next"
       :total="totalNum"
       background
-    ></el-pagination>
-    <!--  -->
-    <div style="background-color: rgb(242,247,251);padding: 5px 10px;position: fixed;width: -webkit-fill-available;bottom: 0px;" v-show="false">
-      <el-button class="FYIcon" icon="el-icon-arrow-left" circle></el-button>
-      <el-button class="FYIcon" icon="el-icon-d-arrow-left" circle></el-button>
-      <el-select v-model="FY" placeholder="1/1" style="width:110px;margin:0px 10px;position: relative;top: -7px;" size="medium">
-        <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        ></el-option>
-      </el-select>
-      <el-button class="FYIcon" icon="el-icon-d-arrow-right" circle></el-button>
-      <el-button class="FYIcon" icon="el-icon-arrow-right" circle></el-button>
-    </div>
-    <!--  -->
+    ></el-pagination> -->
+    <!-- 底部分页 -->
+    <Paging :PageSize="pageSize" :PageIndex="currentPage" :TotalNum="totalNum" @Refresh="GetData" @RefreshPage="RefreshPage" ref="Paging" />
+    <!-- 底部分页 -->
   </div>
 </template>
 
@@ -52,20 +41,17 @@ const columns = [
   { id: '仓位', label: '仓位', width: 60, sort: false },
   { id: '物料编码', label: '物料编码', width: 120, sort: false },
   { id: '物料名称', label: '物料名称', sort: false },
-  { id: '规格型号', label: '规格型号', width: 100, sort: false },
+  { id: '规格型号', label: '规格型号', width: 330, sort: false },
   { id: '单位', label: '单位', width: 100, sort: false },
   { id: '辅助属性', label: '辅助属性', width: 100, sort: false },
   { id: '批号', label: '批号', width: 100, sort: false },
   { id: '库存数量', label: '库存数量', width: 100, sort: false }
 ]
-const options = []
 // 派工单页面
 export default {
   name: 'Stock',
   data () {
     return {
-      FY: '1/1',
-      options,
       tabledata: [],
       currentPage: 1,
       pageSize: 10,
@@ -78,7 +64,8 @@ export default {
     }
   },
   components: {
-    tableHeader: () => import('@/components/tablePageHeader.vue')
+    tableHeader: () => import('@/components/tablePageHeader.vue'),
+    Paging: () => import('@/components/Common/Paging.vue')
   },
   methods: {
     handelTabChange (value) {
@@ -92,7 +79,11 @@ export default {
       this.currentPage = value
       this.GetData()
     },
+    RefreshPage (value) {
+      this.currentPage = value.PageIndex
+    },
     GetData () {
+      // if(obj!=="undefined"){this.currentPage=obj.PageIndex}
       var _this = this
       const loading = this.$loading({
         lock: true,
@@ -113,25 +104,11 @@ export default {
 
           var result = res.data.result // 集合
           _this.totalNum = result.totalCount // 总长度
-
-          _this.totalPage =
-            result.totalCount % _this.pageSize !== 0
-              ? parseInt(result.totalCount / _this.pageSize) * 1 + 1 * 1
-              : parseInt(result.totalCount / _this.pageSize)
-          console.log(result.totalCount / _this.pageSize)
-          // 生成下拉分页
-          _this.options = []
-          for (var i = 1; i < _this.totalPage + 1; i++) {
-            _this.options.push({
-              label: i + ' / ' + _this.totalPage + '页',
-              value: i
-            })
-          }
-          var TabaleObj = {} // 对象
           var TableList = [] // 集合
 
           // 遍历返回集合 选取需要的
           result.items.forEach(item => {
+            var TabaleObj = {} // 对象
             TabaleObj.仓库 = item.仓库
             TabaleObj.仓位 = item.仓位
             TabaleObj.物料编码 = item.物料编码
@@ -175,17 +152,5 @@ export default {
 </script>
 
 <style scoped>
-/* .el-button+.el-button{
-  margin: 0px;
-} */
-.FYIcon {
-  font-size: 35px;
-}
-.el-input--medium .el-input__inner {
-    height: 45px !important;
-    line-height: 36px;
-}
-.el-input__inner{
-  font-size: large!important;
-}
+
 </style>

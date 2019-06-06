@@ -9,9 +9,9 @@
   >
     <!-- 输入框 -->
     <el-row style="padding: 20px 0px;">
-      <el-col :span="14">
+      <el-col :span="24">
         <div class="grid-content">
-          <div class="demo-input-suffix" style="line-height:40px;font-size: 20px;">
+          <div class="demo-input-suffix" style="line-height:40px;font-size: 20px;text-align: left;">
             派工单号：
             <span class="color_red">{{from.派工单号}}</span>
             ，设备：{{from.设备}}，产品名称：{{from.产品名称}}，工序：{{from.工序}}，派工数：

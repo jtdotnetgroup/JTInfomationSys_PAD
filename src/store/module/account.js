@@ -32,6 +32,7 @@ const account = {
           var data = res.data
           if (!data.error) {
             sessionStorage.setItem('token', data.result.accessToken)
+            sessionStorage.setItem('name', data.result.userName)
             commit('UPDATE_ACCESSTOKEN', data.result.accessToken)
             commit('UPDATE_USERNAME', payload.username)
             resolve()
@@ -45,6 +46,7 @@ const account = {
       commit('UPDATE_USERNAME', '')
       commit('SET_PERMISSIONS', {})
       sessionStorage.removeItem('token')
+      sessionStorage.removeItem('name')
     },
 
     GetInfo ({ commit }) {

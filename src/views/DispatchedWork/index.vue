@@ -15,7 +15,7 @@
         :width="col.width"
         v-show="false"
       ></el-table-column>
-      <el-table-column label="操作" align="center" fixed="right" width="200">
+      <el-table-column label="操作" align="center" fixed="right" width="300">
         <template slot-scope="scope">
           <el-button style="text-align: center"
             plain
@@ -29,8 +29,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <!--分页-->
-    <el-pagination
+    <!-- <el-pagination
       @size-change="sizeChange"
       @current-change="currentChange"
       :current-page="currentPage"
@@ -39,7 +38,10 @@
       layout="prev, pager, next"
       :total="totalNum"
       background
-    ></el-pagination>
+    ></el-pagination> -->
+    <!-- 底部分页 -->
+    <Paging :PageSize="pageSize" :PageIndex="currentPage" :TotalNum="totalNum" @Refresh="GetData" @RefreshPage="RefreshPage" ref="Paging" />
+    <!-- 底部分页 -->
     <!--其他页面模板-->
     <OpenWork ref="OpenWork" @addSuccess="GetData"/>
     <AbnormalReport ref="AbnormalReport" @addSuccess="GetData"/>
@@ -118,10 +120,14 @@ export default {
     AbnormalReport: () => import('./AbnormalReport'),
     Picking: () => import('./Picking'),
     Report: () => import('./Report'),
-    ReportDetailed: () => import('./ReportDetailed')
+    ReportDetailed: () => import('./ReportDetailed'),
+    Paging: () => import('@/components/Common/Paging.vue')
   },
   // 声明方法
   methods: {
+    RefreshPage (value) {
+      this.currentPage = value.PageIndex
+    },
     Refresh () {
       this.GetData()
     },

@@ -60,4 +60,5 @@ export default {
 .el-button {
   font-size: 2rem;
 }
+
 </style>

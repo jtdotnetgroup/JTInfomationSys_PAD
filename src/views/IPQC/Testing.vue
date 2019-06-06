@@ -1,19 +1,20 @@
 <template>
   <!-- 页面 -->
   <div class="fullscreen">
-    <tableHeader
-      class="header"
-      :title="title"
-      :items="tabItems"
-      @tabChange="handelTabChange"
-    />
+    <tableHeader class="header" :title="title" :items="tabItems" @tabChange="handelTabChange"/>
     <!-- 表格 -->
-    <el-table :data="tabledata" border stripe  v-loading="loading"  max-height="80vh">
-      <el-table-column v-for="col in columnHeader" :prop="col.id" :key="col.id" :label="col.label" :width="col.width"></el-table-column>
-      <el-table-column label="操作" align="center"  fixed="right" width="200">
+    <el-table :data="tabledata" border stripe v-loading="loading" max-height="80vh">
+      <el-table-column
+        v-for="col in columnHeader"
+        :prop="col.id"
+        :key="col.id"
+        :label="col.label"
+        :width="col.width"
+      ></el-table-column>
+      <el-table-column label="操作" align="center" fixed="right" width="200">
         <template slot-scope="scope">
           <el-button
-          style="text-align:center"
+            style="text-align:center"
             plain
             round
             v-for="item in funmenu"
@@ -26,7 +27,7 @@
       </el-table-column>
     </el-table>
     <!-- 分页 -->
-    <el-pagination
+    <!-- <el-pagination
       @size-change="sizeChange"
       @current-change="currentChange"
       :current-page="currentPage"
@@ -35,7 +36,15 @@
       layout="prev, pager, next"
       :total="totalNum"
       background
-    ></el-pagination>
+    ></el-pagination>-->
+    <Paging
+      :PageSize="pageSize"
+      :PageIndex="currentPage"
+      :TotalNum="totalNum"
+      @Refresh="GetData"
+      @RefreshPage="RefreshPage"
+      ref="Paging"
+    />
   </div>
 </template>
 <!-- 脚本 -->
@@ -56,8 +65,8 @@ export default {
       ],
       tabledata: [],
       loading: false,
-      currentPage: 0,
-      pageSize: 20,
+      currentPage: 1,
+      pageSize: 10,
       totalNum: 0,
       tabvalue: 'report',
       tableColumns: columns,
@@ -80,9 +89,13 @@ export default {
     }
   },
   components: {
-    tableHeader: () => import('@/components/tablePageHeader.vue')
+    tableHeader: () => import('@/components/tablePageHeader.vue'),
+    Paging: () => import('@/components/Common/Paging.vue')
   },
   methods: {
+    RefreshPage (value) {
+      this.currentPage = value.PageIndex
+    },
     handelTabChange (value) {
       this.tabvalue = value
     },
@@ -111,7 +124,15 @@ export default {
           })
           break
         case 1:
-          _this.ZJCompleted(obj)
+          this.$confirm('确定已检验吗?', '系统提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          })
+            .then(() => {
+              _this.ZJCompleted(obj)
+            })
+            .catch(() => {})
           break
         default:
           break
@@ -128,7 +149,7 @@ export default {
           if (res.status === 200) {
             _this.GetData()
             _this.$message({
-              message: '保存',
+              message: '保存成功',
               type: 'success'
             })
           }
@@ -146,7 +167,7 @@ export default {
         FStatus: Status,
         FClosed: null,
         Sorting: 'FClosed',
-        SkipCount: this.currentPage,
+        SkipCount: (this.currentPage - 1) * this.pageSize,
         MaxResultCount: this.pageSize
       }
       const loading = this.$loading({

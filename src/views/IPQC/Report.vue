@@ -502,9 +502,12 @@ export default {
           _this.loading = false
         })
     },
+    // 遍历不良项目
     GetTB_BadItemRelation_SeticQualityRptsList (icQualityRptsList, obj3) {
       var _this = this
-      if (_this.AllCol.length > 2) { return }
+      if (_this.AllCol.length > 2) {
+        return
+      }
       _this.loading = true
       // 0 false ,1 true
       GetAll('TB_BadItemRelation/GetAll', {})
@@ -536,7 +539,10 @@ export default {
               })
             }
           })
-          _this.AllCol.push(obj3)
+          if (_this.AllCol.indexof(obj3) >= 0) {
+          } else {
+            _this.AllCol.push(obj3)
+          }
           var nums = 0
           _this.AllCol.forEach(e => {
             e.Col.forEach(tmp => {

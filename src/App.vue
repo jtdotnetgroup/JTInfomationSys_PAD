@@ -104,11 +104,17 @@ tr {
 /*顶部选项卡*/
 .el-radio-group {
   padding: 5px !important;
-  margin-top: 15px !important;
+  margin-top: 7px !important;
 }
 
 .el-table th.gutter{
     display: table-cell!important;
 }
-
+.is-scrolling-none{
+      overflow-y: auto!important;
+    max-height: 76vh!important;
+}
+.el-radio-button__inner{
+      font-size: 25px!important;
+}
 </style>
