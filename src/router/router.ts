@@ -13,9 +13,6 @@ const router = new Router({
 
 
 router.beforeEach((to, from, next) => {
-
-  console.log('routes',router)
-
   var token = store.getters.token
   
   if (token) {
@@ -55,7 +52,6 @@ router.beforeEach((to, from, next) => {
     }
 
   } else {
-    console.log('token:',token)
    //未登录
    if(to.path==='/login'){
      next()

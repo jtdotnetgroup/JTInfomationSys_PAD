@@ -26,16 +26,14 @@ const http = axios.create({
 
 //
 const err = (error) => {
-  console.log(error)
   if (error.response) {
     const data = error.response.data
-    const token = Vue.ls.get(ACCESS_TOKEN)
+    const result = data.error
+    const token = sessionStorage.getItem('token')
     if (error.response.status === 403) {
-      console.log('抱歉，你没有权限操作！')
       Message.error('抱歉，你没有权限操作！')
     }
     if (error.response.status === 401 && !(data.result && data.result.isLogin)) {
-      console.log('未授权,请登录')
       Message.error('未授权,请登录')
       if (token) {
         store.dispatch('Logout').then(() => {
@@ -46,58 +44,27 @@ const err = (error) => {
       }
     }
     if (error.response.status === 500) {
-      console.log('抱歉，服务器处理请求异常')
-      Message.error('抱歉，服务器处理请求异常')
+      Message.error(result.details)
     }
     if (error.response.status === 400) {
-      console.log(data.error.details)
-      Message.error(data.error.details)
+      Message.error(result.details)
     }
   }
   return Promise.reject(error)
 }
-//
-http.interceptors.request.use(function (config) {
-  // console.log('dsaasd')
 
+http.interceptors.request.use(config => {
   var token = sessionStorage.getItem('token')
+  config.headers.common['.AspNetCore.Culture'] = 'zh-Hans'
   if (token) {
     sessionStorage.setItem('token', token)
-    // console.log('interceptors' + sessionStorage.token)
     config.headers.common['Authorization'] = 'Bearer ' + token
-    config.headers.common['.AspNetCore.Culture'] = 'zh-Hans'
-    // config.headers['Access-Token'] = sessionStorage.token
-  } else {
-    // console.log('请重新登录！')
   }
   return config
 }, err)
 
-// // 请求拦截
-// axios.interceptors.request.use(
-//   config => {
-//     config.withCredentials = true // 允许携带token ,这个是解决跨域产生的相关问题
-//     config.timeout = 6000
-//     let token = store.state.account.accessToken
-//     let csrf = store.getters.csrf
-
-//     if (token) {
-//       config.headers = {
-//         'access-token': token,
-//         'Content-Type': 'application/x-www-form-urlencoded'
-//       }
-//     }
-//     if (config.url === 'refresh') {
-//       config.headers = {
-//         'refresh-token': sessionStorage.getItem('refresh_token'),
-//         'Content-Type': 'application/x-www-form-urlencoded'
-//       }
-//     }
-//     return config
-//   },
-//   error => {
-//     return Promise.reject(error)
-//   }
-// )
+http.interceptors.response.use(config => {
+  return config
+}, err)
 
 export default http
