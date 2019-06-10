@@ -57,6 +57,9 @@
     </el-table>
     <!-- 继续汇报 -->
     <div style="text-align:right;padding-top: 30px;">
+      <el-input placeholder="请输入批次号" v-model="from.BatchNum" style="width:40%">
+        <template slot="prepend">请输入批次号</template>
+      </el-input>
       <i class="el-icon-minus icon" @click="from.HB--"></i>
       <span class="icon" @click="DigitalOpen()">{{from.HB}}</span>
       <i class="el-icon-plus icon" @click="from.HB++"></i>
@@ -81,6 +84,7 @@ import {
 const column = [
   { id: 'fBillNo', label: '检验单号', width: 200, sort: false },
   { id: 'FStatus', label: '状态', width: 90, sort: false },
+  { id: 'BatchNum', label: '批次号', width: 200, sort: false },
   { id: 'FAuxQty', label: '汇报数', width: 90, sort: false },
   { id: 'FCheckAuxQty', label: '检验数', width: 90, sort: false },
   { id: 'FPassAuxQty', label: '合格数', width: 90, sort: false },
@@ -104,7 +108,8 @@ export default {
         设备: '',
         产品名称: '',
         派工: 0,
-        派工单号: ''
+        派工单号: '',
+        BatchNum: ''
       },
       // 加载框
       loading: false,
@@ -122,9 +127,14 @@ export default {
         {
           type: '',
           num: 0,
-          title: '修改汇报',
-          show: false,
-          ShowWhe: ['report']
+          title: '修改',
+          show: true
+        },
+        {
+          type: '',
+          num: 1,
+          title: '删除',
+          show: true
         }
       ],
       // 数据源
@@ -199,13 +209,21 @@ export default {
     // 汇报
     onSubmit () {
       var _this = this
+      if (_this.from.BatchNum.length === 0) {
+        this.$message.error('批次号不能为空！')
+        return
+      }
       this.$confirm('确认汇报该数量吗？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       })
         .then(() => {
-          var obj = { ICMODispBillID: _this.from.FID, FAuxQty: _this.from.HB }
+          var obj = {
+            ICMODispBillID: _this.from.FID,
+            FAuxQty: _this.from.HB,
+            BatchNum: _this.from.BatchNum
+          }
           console.log(obj)
           DataAdd('ICMOInspectBill/Create', obj)
             .then(res => {
@@ -215,6 +233,8 @@ export default {
                   message: '添加汇报成功',
                   type: 'success'
                 })
+                _this.from.HB = 0
+                _this.from.BatchNum = ''
                 _this.Hide()
                 _this.$emit('addSuccess')
               }
@@ -252,6 +272,7 @@ export default {
                   : _this.$moment(item.fInspectTime).format('YYYY-MM-DD hh:mm')
               tmp.FNote = item.fNote
               tmp.Fid = item.fid
+              tmp.BatchNum = item.batchNum
               DS.push(tmp)
             })
             _this.DataSource = DS
