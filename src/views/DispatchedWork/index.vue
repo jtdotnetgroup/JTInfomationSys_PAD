@@ -134,6 +134,7 @@ export default {
   },
   // 声明方法
   methods: {
+    // 标题数量
     UpdCount () {
       var TaskQty = this.$store.state.TaskQty.TaskQty
       this.tabItems.forEach(tmp => {

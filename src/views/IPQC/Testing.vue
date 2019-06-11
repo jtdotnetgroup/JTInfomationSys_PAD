@@ -60,15 +60,15 @@ export default {
     return {
       title: '质量检验',
       tabItems: [
-        // { title: '待检验', value: 'receive', count: 0 },
-        { title: '质量检验', value: 'report', count: 0 }
+        { title: '待检验', value: 'DHB', count: 0, key: 'ZLJYDJY' },
+        { title: '已检验', value: 'YZJ', count: 0, key: 'ZLJYYJY' }
       ],
       tabledata: [],
       loading: false,
       currentPage: 1,
       pageSize: 10,
       totalNum: 0,
-      tabvalue: 'report',
+      tabvalue: 'DHB',
       tableColumns: columns,
       funmenu: [
         {
@@ -76,14 +76,14 @@ export default {
           num: 0,
           title: '检验',
           show: true,
-          ShowWhe: ['receive']
+          ShowWhe: ['DHB']
         },
         {
           type: 'success',
           num: 1,
           title: '已检验',
           show: true,
-          ShowWhe: ['receive']
+          ShowWhe: ['DHB']
         }
       ]
     }
@@ -93,11 +93,25 @@ export default {
     Paging: () => import('@/components/Common/Paging.vue')
   },
   methods: {
+    // 标题数量
+    UpdCount () {
+      var TaskQty = this.$store.state.TaskQty.TaskQty
+      console.log(TaskQty)
+      this.tabItems.forEach(tmp => {
+        TaskQty.forEach(item => {
+          if (tmp.key === item.strKey) {
+            tmp.count = item.total
+          }
+        })
+      })
+    },
     RefreshPage (value) {
       this.currentPage = value.PageIndex
     },
     handelTabChange (value) {
       this.tabvalue = value
+      this.GetData()
+      this.showmenu()
     },
     sizeChange (value) {},
     currentChange (value) {},
@@ -161,7 +175,7 @@ export default {
         })
     },
     GetData () {
-      var Status = this.tabvalue === 'receive' ? 0 : 1
+      var Status = this.tabvalue === 'DHB' ? 1 : 2
       var obj = {
         操作者: '1',
         FStatus: Status,
@@ -223,24 +237,31 @@ export default {
         .catch(function () {
           loading.close()
         })
+    },
+    // 显示菜单
+    showmenu () {
+      this.funmenu.forEach(item => {
+        item.show = item.ShowWhe.indexOf(this.tabvalue) >= 0
+      })
     }
   },
   // 页面渲染前 执行
-  created: function () {},
+  created: function () {
+    this.showmenu()
+  },
   // 页面渲染后 执行
   mounted: function () {
     this.GetData()
+    this.UpdCount()
   },
   // 页面渲染后 执行
   computed: {
     columnHeader () {
       switch (this.tabvalue) {
-        case 'receive': {
-          this.GetData()
-          return this.tableColumns.receive
+        case 'DHB': {
+          return this.tableColumns.report
         }
-        case 'report': {
-          this.GetData()
+        case 'YZJ': {
           return this.tableColumns.report
         }
       }
