@@ -130,7 +130,7 @@ export default {
       switch (type) {
         // 修改异常
         case 0:
-          obj = { FID: row.FIDk, FSrcID: row.FSrcID }
+          obj = { FID: row.FID, FSrcID: row.FSrcID }
           this.$refs.AbnormalReport.show(obj)
           break
         // 默认提示功能尚未开发

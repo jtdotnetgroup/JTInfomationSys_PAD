@@ -40,7 +40,7 @@
         v-show="false"
       ></el-table-column>
       <!-- 操作功能 -->
-      <el-table-column label="操作" fixed="right">
+      <el-table-column label="操作" fixed="right" width="200">
         <!-- 生成操作按钮 -->
         <template slot-scope="scope">
           <el-button
@@ -58,7 +58,7 @@
     <!-- 继续汇报 -->
     <div style="text-align:right;padding-top: 30px;">
       <el-input placeholder="请输入批次号" v-model="from.BatchNum" style="width:40%">
-        <template slot="prepend">请输入批次号</template>
+        <template slot="prepend">批次号</template>
       </el-input>
       <i class="el-icon-minus icon" @click="from.HB--"></i>
       <span class="icon" @click="DigitalOpen()">{{from.HB}}</span>
@@ -68,11 +68,12 @@
     </div>
     <!-- 打开数字键盘 以及接受回调 -->
     <Digital ref="Digital" @DigitalCallback="DigitalCallback"/>
+    <HBPC ref="HBPC" @addSuccess="GetDataSource"/>
   </el-dialog>
 </template>
 <!-- 脚本 -->
 <script>
-// 列
+
 // 数据处理
 import {
   GetAll,
@@ -81,6 +82,7 @@ import {
   AddOrPUT,
   DataAdd
 } from '@/api/mission'
+// 列
 const column = [
   { id: 'fBillNo', label: '检验单号', width: 200, sort: false },
   { id: 'FStatus', label: '状态', width: 90, sort: false },
@@ -97,7 +99,8 @@ const column = [
 //
 export default {
   components: {
-    Digital: () => import('@/components/Common/Digital.vue')
+    Digital: () => import('@/components/Common/Digital.vue'),
+    HBPC: () => import('@/views/DispatchedWork/HBPC.vue')
   },
   data () {
     return {
@@ -172,7 +175,7 @@ export default {
       this.from.派工单号 = obj.派工单号
       this.from.派工 = obj.派工
       this.from.产品名称 = obj.产品名称
-      this.GetDataSource(obj)
+      this.GetDataSource()
     },
     // 隐藏窗体
     Hide () {
@@ -196,10 +199,43 @@ export default {
     Handle: function (type, index, row) {
       var _this = this
       var obj = {}
-      // console.log(index, row);
+      console.log(index, row)
       switch (type) {
-        // 修改汇报
+        // 修改
         case 0:
+          obj = {
+            FID: row.Fid,
+            num: row.FAuxQty,
+            BatchNum: row.BatchNum,
+            fBillNo: row.fBillNo
+          }
+          console.log(obj)
+          _this.$refs.HBPC.show(obj)
+          break
+        // 删除
+        case 1:
+          this.$confirm('确定要删除该汇报记录吗?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          })
+            .then(() => {
+              _this.ShowLod()
+              DataDel('ICMOInspectBill/Delete', { FID: row.FID })
+                .then(res => {
+                  if (res.success) {
+                    _this.GetDataSource(this.from)
+                    this.$message('删除成功')
+                  } else {
+                    this.$message.error('删除失败，请稍后重试')
+                  }
+                  _this.HideLod()
+                })
+                .catch(function () {
+                  _this.HideLod()
+                })
+            })
+            .catch(() => {})
           break
         // 默认提示功能尚未开发
         default:
@@ -224,7 +260,7 @@ export default {
             FAuxQty: _this.from.HB,
             BatchNum: _this.from.BatchNum
           }
-          console.log(obj)
+          _this.ShowLod()
           DataAdd('ICMOInspectBill/Create', obj)
             .then(res => {
               if (res.data.success) {
@@ -244,9 +280,9 @@ export default {
         .catch(() => {})
     },
     // 获取数据源
-    GetDataSource (obj) {
+    GetDataSource () {
       var _this = this
-      obj.ICMODispBillID = obj.FID
+      var obj = { ICMODispBillID: this.from.FID }
       _this.ShowLod()
       // obj 必须含有 任务单号ID
       var url = 'ICMOInspectBill/GetList'
