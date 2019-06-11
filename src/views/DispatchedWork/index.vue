@@ -78,7 +78,7 @@ export default {
         { title: '待汇报', value: 'report', count: 0, key: 'PGRWDHB' }
       ],
       tabledata: [], // 数据集合
-      currentPage: 0, // 当前页数
+      currentPage: 1, // 当前页数
       pageSize: 20, // 页容量
       totalNum: 0, // 总条数
       tabvalue: 'receive', // 选中显示卡
@@ -184,6 +184,7 @@ export default {
                       message: '标记开工成功',
                       type: 'success'
                     })
+                    _this.GetData()
                     setTimeout(() => {
                       _this.fullscreenLoading = false
                     }, 2000)
@@ -232,7 +233,7 @@ export default {
         FStatus: this.tabvalue === 'receive' ? 0 : 1,
         FClosed: null,
         Sorting: 'FClosed',
-        SkipCount: this.currentPage,
+        SkipCount: (this.currentPage - 1) * this.pageSize,
         MaxResultCount: this.pageSize
       }
       const loading = this.$loading({
