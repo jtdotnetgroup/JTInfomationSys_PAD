@@ -12,13 +12,13 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item label="报告人：" prop="FBiller">
-        <el-input v-model="from.FBiller"></el-input>
+        <el-input v-model="from.FBiller" :readonly="true"></el-input>
       </el-form-item>
       <el-form-item label="报告时间：" prop="FTime">
-        <el-input v-model="from.FTime"></el-input>
+        <el-input v-model="from.FTime" :readonly="true"></el-input>
       </el-form-item>
       <el-form-item label="恢复时间：" prop="FRecoverTime">
-        <el-input v-model="from.FRecoverTime"></el-input>
+        <el-input v-model="from.FRecoverTime" :readonly="true"></el-input>
       </el-form-item>
       <el-form-item style="text-align:right;">
         <el-button type="danger" @click="onSubmit('YC')">异常</el-button>
@@ -89,7 +89,7 @@ export default {
             message: '修改成功',
             type: 'success'
           })
-          _this.$emit('addSuccess')
+          _this.$emit('addSuccess', { FID: this.from.FSrcID })
           this.hide()
           this.loading = false
         })
