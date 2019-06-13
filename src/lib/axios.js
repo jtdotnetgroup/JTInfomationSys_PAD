@@ -11,15 +11,16 @@ var url = window.location.host
 var baseURL = ''
 if (url.indexOf('http://222.72.134.71') >= 0) {
   baseURL = 'http://222.72.134.71:8093'
-} else if (url.indexOf('192.168.1.207') >= 0) {
-  baseURL = 'http://192.168.1.207:21021'
+} else if (url.indexOf('192.168.1') >= 0) {
+  // baseURL = 'http://192.168.1.177:8088'
+  baseURL = 'http://192.168.1.215:8099'
 } else if (url.indexOf('localhost') >= 0) {
   // 开发环境
   baseURL = 'http://localhost:21021'
 }
 // console.log(baseURL)
 const http = axios.create({
-  baseURL: baseURL + '/api/services/app/',
+  baseURL: baseURL,
   timeout: 20000
 })
 
@@ -49,6 +50,10 @@ const err = (error) => {
       Message.error('抱歉，服务器处理请求异常')
     }
     if (error.response.status === 400) {
+      console.log(data.error.details)
+      Message.error(data.error.details)
+    }
+    if (error.response.status === 204) {
       console.log(data.error.details)
       Message.error(data.error.details)
     }

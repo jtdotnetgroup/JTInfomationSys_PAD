@@ -73,13 +73,13 @@
             </el-col>
             <el-col :span="12">
               <div class="grid-content bt">
-                <i class="el-icon-minus icon" v-show="item.IsAddDel" @click="item.num--"></i>
+                <i class="el-icon-minus icon" v-show="item.IsAddDel" @click="DelNum(item.key)"></i>
                 <span
                   :style="'color:'+item.numcolor"
                   :id="item.key"
                   @click="DigitalOpen(item,item.IsAddDel)"
                 >{{item.num}}</span>
-                <i class="el-icon-plus icon" v-show="item.IsAddDel" @click="item.num++"></i>
+                <i class="el-icon-plus icon" v-show="item.IsAddDel" @click="AddNum(item.key)"></i>
               </div>
             </el-col>
           </el-row>
@@ -140,7 +140,7 @@ export default {
               num: 0,
               typecolor: 'back',
               numcolor: 'back',
-              IsAddDel: true
+              IsAddDel: false
             },
             {
               key: 'FFailAuxQty',
@@ -152,7 +152,7 @@ export default {
             },
             {
               key: 'BZS',
-              type: '包装数',
+              type: '单位包装数',
               num: this.$route.query.F_102,
               typecolor: 'red',
               numcolor: 'red',
@@ -211,12 +211,71 @@ export default {
       TB_BadItemRelation: []
     }
   },
+  watch: {},
   components: {
     tableHeader: () => import('@/components/tablePageHeader.vue'),
     Digital: () => import('@/components/Common/Digital.vue')
   },
   // 所有方法
   methods: {
+    // 增加
+    AddNum (key) {
+      this.AllCol.forEach(tmp => {
+        tmp.Col.forEach(item => {
+          if (item.key === key) {
+            item.num++
+          }
+        })
+      })
+      this.IsTD(key)
+    },
+    // 删除
+    DelNum (key) {
+      this.AllCol.forEach(tmp => {
+        tmp.Col.forEach(item => {
+          if (item.key === key) {
+            item.num--
+          }
+        })
+      })
+      this.IsTD(key)
+    },
+    SetNum (key, num) {
+      this.AllCol.forEach(tmp => {
+        tmp.Col.forEach(item => {
+          if (item.key === key) {
+            item.num = num
+          }
+        })
+      })
+    },
+    IsTD (key) {
+      if (
+        key === 'FCheckAuxQty' ||
+        key === 'FPassAuxQty' ||
+        key === 'FFailAuxQty'
+      ) {
+        // 检验数
+        var FCheckAuxQty = this.AllCol[0].Col.filter(t => {
+          return t.key === 'FCheckAuxQty'
+        })[0].num
+        // 合格数
+        var FPassAuxQty = this.AllCol[0].Col.filter(t => {
+          return t.key === 'FPassAuxQty'
+        })[0].num
+        // 不合格数
+        var FFailAuxQty = this.AllCol[0].Col.filter(t => {
+          return t.key === 'FFailAuxQty'
+        })[0].num
+        // 单位包装数
+        var BZS = this.AllCol[0].Col.filter(t => {
+          return t.key === 'BZS'
+        })[0].num
+
+        this.SetNum('FYSQty', (FCheckAuxQty * 1 - FFailAuxQty * 1) % BZS)
+        this.SetNum('FPassAuxQty', FCheckAuxQty * 1 - FFailAuxQty * 1)
+      }
+    },
     // 打开键盘
     DigitalOpen (value, IsAddDel) {
       if (IsAddDel) {
@@ -240,6 +299,7 @@ export default {
         })
       })
       this.$refs.Digital.hide()
+      this.IsTD(obj.key)
     },
     // 获取不良项目列表
     GetTB_BadItemRelation () {
@@ -366,7 +426,7 @@ export default {
                   num: Bill.fPassAuxQty * 1,
                   typecolor: 'back',
                   numcolor: 'back',
-                  IsAddDel: true
+                  IsAddDel: false
                 },
                 {
                   key: 'FFailAuxQty',
@@ -378,7 +438,7 @@ export default {
                 },
                 {
                   key: 'BZS',
-                  type: '包装数',
+                  type: '单位包装数',
                   num: this.$route.query.F_102,
                   typecolor: 'red',
                   numcolor: 'red',
@@ -461,7 +521,7 @@ export default {
             } else {
               _this.TB_BadItemRelation.forEach(tmp => {
                 console.log(tmp.fDeleted)
-                var IsShow = tmp.fDeleted
+                var IsShow = !tmp.fDeleted
                 var FItemID = tmp.fid
                 var FName = tmp.fName
                 var FAuxQty = 0
@@ -502,9 +562,12 @@ export default {
           _this.loading = false
         })
     },
+    // 遍历不良项目
     GetTB_BadItemRelation_SeticQualityRptsList (icQualityRptsList, obj3) {
       var _this = this
-      if (_this.AllCol.length > 2) { return }
+      if (_this.AllCol.length > 2) {
+        return
+      }
       _this.loading = true
       // 0 false ,1 true
       GetAll('TB_BadItemRelation/GetAll', {})
@@ -536,7 +599,10 @@ export default {
               })
             }
           })
-          _this.AllCol.push(obj3)
+          if (_this.AllCol.indexof(obj3) >= 0) {
+          } else {
+            _this.AllCol.push(obj3)
+          }
           var nums = 0
           _this.AllCol.forEach(e => {
             e.Col.forEach(tmp => {

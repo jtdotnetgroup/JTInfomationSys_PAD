@@ -1,5 +1,5 @@
 <template>
-  <div class="fullscreen">
+  <div class="fullscreen" v-loading.fullscreen.lock="fullscreenLoading">
     <div id="formdiv">
       <div id="title">
         <span>{{title}}</span>
@@ -31,7 +31,8 @@ export default {
   name: 'login',
   data () {
     return {
-      title: '系统登录',
+      fullscreenLoading: false,
+      title: '车间自助工作台系统',
       form: {
         username: '',
         password: ''
@@ -49,32 +50,25 @@ export default {
       var _this = this
       this.$refs['form'].validate(valid => {
         if (valid) {
-          const loading = _this.$loading({
-            lock: true,
-            text: '登录中',
-            spinner: 'el-icon-loading',
-            background: 'rgba(0, 0, 0, 0.7)'
-          })
+          this.fullscreenLoading = true
           this.$store
             .dispatch('account/Login', {
               username: this.form.username,
               password: this.form.password
             })
-            .then(
-              res => {
-                loading.close()
-                // console.log(res)
-                // 登录成功
-                setTimeout(() => {
-                  this.$router.push('/')
-                }, 500)
-              },
-              () => {
-                // 登录失败
-                loading.close()
-                console.log('登录失败')
-              }
-            )
+            .then(res => {
+              _this.fullscreenLoading = false
+              // console.log(res)
+              // 登录成功
+              setTimeout(() => {
+                this.$router.push('/')
+              }, 500)
+            })
+            .catch(() => {
+              // 登录失败
+              _this.fullscreenLoading = false
+                 Message.error('抱歉，服务器处理请求异常')
+            })
         } else {
         }
       })

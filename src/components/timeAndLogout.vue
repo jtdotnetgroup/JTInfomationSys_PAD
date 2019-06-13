@@ -19,7 +19,7 @@ import { account } from '@/store/module/account'
 export default {
   data () {
     return {
-      WorkCode: '1001',
+      WorkCode: sessionStorage.getItem('name'),
       iconPath: './imgs/icons/L_Shutdown2.png',
       strdate: this.$moment().format('YYYY年MM月DD日'),
       strtime: this.$moment().format('HH:mm')

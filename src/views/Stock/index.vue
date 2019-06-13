@@ -1,15 +1,23 @@
 
 <template>
   <div class="fullscreen">
+    <!-- 标题栏目 -->
     <tableHeader class="header" :title="title" :items="tabItems" @tabChange="handelTabChange"/>
+    <!-- 表格 -->
     <el-table :data="tabledata" border stripe>
-      <el-table-column v-for="col in columns" :prop="col.id" :key="col.id" :label="col.label"></el-table-column>
+      <el-table-column
+        v-for="col in columns"
+        :prop="col.id"
+        :key="col.id"
+        :label="col.label"
+        :width="col.width"
+      ></el-table-column>
       <!-- <el-table-column label="操作">
         <template>
         </template>
       </el-table-column>-->
     </el-table>
-    <el-pagination
+    <!-- <el-pagination
       @size-change="sizeChange"
       @current-change="currentChange"
       :current-page="currentPage"
@@ -18,7 +26,10 @@
       layout="prev, pager, next"
       :total="totalNum"
       background
-    ></el-pagination>
+    ></el-pagination> -->
+    <!-- 底部分页 -->
+    <Paging :PageSize="pageSize" :PageIndex="currentPage" :TotalNum="totalNum" @Refresh="GetData" @RefreshPage="RefreshPage" ref="Paging" />
+    <!-- 底部分页 -->
   </div>
 </template>
 
@@ -26,11 +37,11 @@
 // 数据处理
 import { GetAll } from '@/api/mission'
 const columns = [
-  { id: '仓库', label: '仓库', width: 100, sort: false },
-  { id: '仓位', label: '仓位', width: 100, sort: false },
-  { id: '物料编码', label: '物料编码', width: 100, sort: false },
-  { id: '物料名称', label: '物料名称', width: 100, sort: false },
-  { id: '规格型号', label: '规格型号', width: 100, sort: false },
+  { id: '仓库', label: '仓库', width: 120, sort: false },
+  { id: '仓位', label: '仓位', width: 60, sort: false },
+  { id: '物料编码', label: '物料编码', width: 120, sort: false },
+  { id: '物料名称', label: '物料名称', sort: false },
+  { id: '规格型号', label: '规格型号', width: 330, sort: false },
   { id: '单位', label: '单位', width: 100, sort: false },
   { id: '辅助属性', label: '辅助属性', width: 100, sort: false },
   { id: '批号', label: '批号', width: 100, sort: false },
@@ -45,6 +56,7 @@ export default {
       currentPage: 1,
       pageSize: 10,
       totalNum: 0,
+      totalPage: 0,
       columns,
       title: '库存查询',
       tabvalue: 'KCCX',
@@ -52,7 +64,8 @@ export default {
     }
   },
   components: {
-    tableHeader: () => import('@/components/tablePageHeader.vue')
+    tableHeader: () => import('@/components/tablePageHeader.vue'),
+    Paging: () => import('@/components/Common/Paging.vue')
   },
   methods: {
     handelTabChange (value) {
@@ -66,7 +79,11 @@ export default {
       this.currentPage = value
       this.GetData()
     },
+    RefreshPage (value) {
+      this.currentPage = value.PageIndex
+    },
     GetData () {
+      // if(obj!=="undefined"){this.currentPage=obj.PageIndex}
       var _this = this
       const loading = this.$loading({
         lock: true,
@@ -80,41 +97,39 @@ export default {
         MaxResultCount: this.pageSize
       }
       GetAll('VM_Inventory/GetAll', obj)
-        .then(
-          res => {
-            // console.log(res); // 返回对象
-            // console.log(res.data.result.items); // 集合
-            // console.log(res.data.result.totalCount); // 总长度
+        .then(res => {
+          // console.log(res); // 返回对象
+          // console.log(res.data.result.items); // 集合
+          // console.log(res.data.result.totalCount); // 总长度
 
-            var result = res.data.result // 集合
-            this.totalNum = result.totalCount // 总长度
+          var result = res.data.result // 集合
+          _this.totalNum = result.totalCount // 总长度
+          var TableList = [] // 集合
+
+          // 遍历返回集合 选取需要的
+          result.items.forEach(item => {
             var TabaleObj = {} // 对象
-            var TableList = [] // 集合
-
-            // 遍历返回集合 选取需要的
-            result.items.forEach(item => {
-              TabaleObj.仓库 = item.仓库
-              TabaleObj.仓位 = item.仓位
-              TabaleObj.物料编码 = item.物料编码
-              TabaleObj.物料名称 = item.物料名称
-              TabaleObj.规格型号 = item.规格型号
-              TabaleObj.单位 = item.单位
-              TabaleObj.辅助属性 = item.辅助属性
-              TabaleObj.批号 = item.批号
-              TabaleObj.库存数量 = item.库存数量
-              TableList.push(TabaleObj)
-            })
-            this.tabledata = []
-            // 重新渲染列表
-            this.tabledata = TableList
-            //
-            this.tabItems.forEach(item => {
-              item.count =
-                item.value === _this.tabvalue ? result.totalCount : item.count
-            })
-            loading.close()
-          }
-        )
+            TabaleObj.仓库 = item.仓库
+            TabaleObj.仓位 = item.仓位
+            TabaleObj.物料编码 = item.物料编码
+            TabaleObj.物料名称 = item.物料名称
+            TabaleObj.规格型号 = item.规格型号
+            TabaleObj.单位 = item.单位
+            TabaleObj.辅助属性 = item.辅助属性
+            TabaleObj.批号 = item.批号
+            TabaleObj.库存数量 = item.库存数量
+            TableList.push(TabaleObj)
+          })
+          this.tabledata = []
+          // 重新渲染列表
+          this.tabledata = TableList
+          //
+          this.tabItems.forEach(item => {
+            item.count =
+              item.value === _this.tabvalue ? result.totalCount : item.count
+          })
+          loading.close()
+        })
         .catch(function () {
           loading.close()
         })
@@ -137,4 +152,5 @@ export default {
 </script>
 
 <style scoped>
+
 </style>

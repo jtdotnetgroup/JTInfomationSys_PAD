@@ -24,7 +24,7 @@
 export default {
   data () {
     return {
-      tab: 'receive'
+      tab: this.items[0].value
     }
   },
   components: {
@@ -60,4 +60,5 @@ export default {
 .el-button {
   font-size: 2rem;
 }
+
 </style>

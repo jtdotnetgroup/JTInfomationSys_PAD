@@ -1,7 +1,7 @@
 
 <template>
   <!--主体-->
-  <div class="fullscreen">
+  <div class="fullscreen" v-loading.fullscreen.lock="fullscreenLoading">
     <!--头部-->
     <tableHeader class="header" :title="title" :items="tabItems" @tabChange="handelTabChange"/>
     <!--表格-->
@@ -15,9 +15,10 @@
         :width="col.width"
         v-show="false"
       ></el-table-column>
-      <el-table-column label="操作" align="center">
+      <el-table-column label="操作" align="center" fixed="right" width="300">
         <template slot-scope="scope">
-          <el-button style="text-align: center"
+          <el-button
+            style="text-align: center"
             plain
             round
             v-for="item in funmenu"
@@ -29,8 +30,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <!--分页-->
-    <el-pagination
+    <!-- <el-pagination
       @size-change="sizeChange"
       @current-change="currentChange"
       :current-page="currentPage"
@@ -39,10 +39,20 @@
       layout="prev, pager, next"
       :total="totalNum"
       background
-    ></el-pagination>
+    ></el-pagination>-->
+    <!-- 底部分页 -->
+    <Paging
+      :PageSize="pageSize"
+      :PageIndex="currentPage"
+      :TotalNum="totalNum"
+      @Refresh="GetData"
+      @RefreshPage="RefreshPage"
+      ref="Paging"
+    />
+    <!-- 底部分页 -->
     <!--其他页面模板-->
     <OpenWork ref="OpenWork" @addSuccess="GetData"/>
-    <AbnormalReport ref="AbnormalReport" @addSuccess="GetData"/>
+    <AbnormalReportList ref="AbnormalReportList" @addSuccess="GetData"/>
     <Picking ref="Picking" @addSuccess="GetData"/>
     <Report ref="Report" @addSuccess="GetData"/>
     <ReportDetailed ref="ReportDetailed" @addSuccess="GetData"/>
@@ -61,25 +71,26 @@ export default {
   // 初始化数据
   data () {
     return {
+      fullscreenLoading: false,
       title: '派工任务', // 标题
       tabItems: [
-        { title: '待开工', value: 'receive', count: 0 },
-        { title: '待汇报', value: 'report', count: 0 }
+        { title: '待开工', value: 'receive', count: 0, key: 'PGRW' },
+        { title: '待汇报', value: 'report', count: 0, key: 'PGRWDHB' }
       ],
       tabledata: [], // 数据集合
-      currentPage: 0, // 当前页数
+      currentPage: 1, // 当前页数
       pageSize: 20, // 页容量
       totalNum: 0, // 总条数
       tabvalue: 'receive', // 选中显示卡
       tableColumns: columns, // 表格的列
       funmenu: [
-        {
-          type: '',
-          num: 0,
-          title: '汇报',
-          show: true,
-          ShowWhe: ['report']
-        },
+        // {
+        //  type: '',
+        //  num: 0,
+        //  title: '汇报',
+        //  show: true,
+        //  ShowWhe: ['report']
+        // },
         {
           type: '',
           num: 1,
@@ -104,7 +115,7 @@ export default {
         {
           type: '',
           num: 4,
-          title: '汇报明细',
+          title: '汇报',
           show: true,
           ShowWhe: ['report']
         }
@@ -115,13 +126,28 @@ export default {
   components: {
     tableHeader: () => import('@/components/tablePageHeader.vue'),
     OpenWork: () => import('./OpenWork'),
-    AbnormalReport: () => import('./AbnormalReport'),
+    AbnormalReportList: () => import('./AbnormalReportList'),
     Picking: () => import('./Picking'),
     Report: () => import('./Report'),
-    ReportDetailed: () => import('./ReportDetailed')
+    ReportDetailed: () => import('./ReportDetailed'),
+    Paging: () => import('@/components/Common/Paging.vue')
   },
   // 声明方法
   methods: {
+    // 标题数量
+    UpdCount () {
+      var TaskQty = this.$store.state.TaskQty.TaskQty
+      this.tabItems.forEach(tmp => {
+        TaskQty.forEach(item => {
+          if (tmp.key === item.strKey) {
+            tmp.count = item.total
+          }
+        })
+      })
+    },
+    RefreshPage (value) {
+      this.currentPage = value.PageIndex
+    },
     Refresh () {
       this.GetData()
     },
@@ -143,13 +169,45 @@ export default {
           break
         // 开工
         case 2:
-          obj = { FID: row.FID, FSrcID: row.FSrcID }
-          _this.$refs.OpenWork.show(obj)
+          // obj = { FID: row.FID, FSrcID: row.FSrcID };
+          // _this.$refs.OpenWork.show(obj);
+          this.$confirm('是否确认开工?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          })
+            .then(() => {
+              _this.fullscreenLoading = true
+              DataAddOrPUT('ICMODispBill/OpenWork', { FID: row.FID })
+                .then(res => {
+                  if (res.data.success) {
+                    this.$message({
+                      message: '标记开工成功',
+                      type: 'success'
+                    })
+                    _this.GetData()
+                    setTimeout(() => {
+                      _this.fullscreenLoading = false
+                    }, 2000)
+                  } else {
+                    this.$message.error('标记开工失败')
+                    setTimeout(() => {
+                      _this.fullscreenLoading = false
+                    }, 2000)
+                  }
+                })
+                .catch(function () {
+                  setTimeout(() => {
+                    _this.fullscreenLoading = false
+                  }, 2000)
+                })
+            })
+            .catch(() => {})
           break
         // 异常
         case 3:
           obj = { FID: row.FID, FSrcID: row.FSrcID }
-          _this.$refs.AbnormalReport.show(obj)
+          _this.$refs.AbnormalReportList.Show(obj)
           break
         // 汇报明细
         case 4:
@@ -176,7 +234,7 @@ export default {
         FStatus: this.tabvalue === 'receive' ? 0 : 1,
         FClosed: null,
         Sorting: 'FClosed',
-        SkipCount: this.currentPage,
+        SkipCount: (this.currentPage - 1) * this.pageSize,
         MaxResultCount: this.pageSize
       }
       const loading = this.$loading({
@@ -255,7 +313,9 @@ export default {
     }
   },
   // 页面渲染前 执行
-  created: function () {},
+  created: function () {
+    this.UpdCount()
+  },
   // 页面渲染后 执行
   mounted: function () {
     this.GetData()
