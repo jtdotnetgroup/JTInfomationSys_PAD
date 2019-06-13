@@ -1,0 +1,3 @@
+diff a/src/router/routes.js b/src/router/routes.js	(rejected hunks)
+@@ -18 +17,0 @@ const routes = [
+-    path: '/IPQC/Testing',
